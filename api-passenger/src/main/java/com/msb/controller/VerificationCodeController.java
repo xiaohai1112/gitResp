@@ -4,10 +4,7 @@ import com.msb.request.VerificationCodeDTO;
 import com.msb.service.VerificationCodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -15,7 +12,7 @@ import java.util.Map;
 public class VerificationCodeController {
     @Autowired
     private VerificationCodeService verificationCodeService;
-    @RequestMapping("/verification-code")
+    @GetMapping("/verification-code")
     @ResponseBody
     public Map verificationCode(@RequestBody VerificationCodeDTO verificationCodeDTO){
         String passengerPhone = verificationCodeDTO.getPassengerPhone();
