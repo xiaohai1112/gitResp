@@ -1,5 +1,6 @@
 package com.msb.controller;
 
+import com.msb.dao.ResponseResult;
 import com.msb.request.VerificationCodeDTO;
 import com.msb.service.VerificationCodeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,7 @@ public class VerificationCodeController {
     private VerificationCodeService verificationCodeService;
     @GetMapping("/verification-code")
     @ResponseBody
-    public Map verificationCode(@RequestBody VerificationCodeDTO verificationCodeDTO){
+    public ResponseResult verificationCode(@RequestBody VerificationCodeDTO verificationCodeDTO){
         String passengerPhone = verificationCodeDTO.getPassengerPhone();
         System.out.println("接收到的号码是："+passengerPhone);
         return verificationCodeService.generatorCode(passengerPhone);
