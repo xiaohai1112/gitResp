@@ -1,0 +1,24 @@
+package com.msb.servicepassengeruser.controller;
+
+import com.msb.dao.ResponseResult;
+import com.msb.request.VerificationCodeDTO;
+import com.msb.servicepassengeruser.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+@Controller
+public class UserController {
+    @Autowired
+    private UserService userService;
+    @PostMapping("/user")
+    @ResponseBody
+    public ResponseResult login(@RequestBody VerificationCodeDTO verificationCodeDTO){
+        String phone = verificationCodeDTO.getPassengerPhone();
+        System.out.println("手机号:"+phone);
+        return userService.loginOrRegister(phone);
+
+    }
+}
