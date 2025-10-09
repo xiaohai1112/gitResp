@@ -20,4 +20,13 @@ public class VerificationCodeController {
         System.out.println("接收到的号码是："+passengerPhone);
         return verificationCodeService.generatorCode(passengerPhone);
     }
+    @PostMapping("/verification-code-check")
+    public ResponseResult checkverificationCode(@RequestBody VerificationCodeDTO verificationCodeDTO){
+        String passengerPhone = verificationCodeDTO.getPassengerPhone();
+        String verificationCode = verificationCodeDTO.getVerificationCode();
+
+        System.out.println(passengerPhone+"----"+verificationCode);
+
+        return verificationCodeService.checkCode(passengerPhone,verificationCode);
+    }
 }

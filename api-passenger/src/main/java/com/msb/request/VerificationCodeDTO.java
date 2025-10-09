@@ -1,13 +1,10 @@
 package com.msb.request;
 
+import lombok.Data;
+
+@Data
 public class VerificationCodeDTO {
-    public String PassengerPhone;
+    private String PassengerPhone;
+    private String verificationCode;
 
-    public String getPassengerPhone() {
-        return PassengerPhone;
-    }
-
-    public void setPassengerPhone(String passengerPhone) {
-        PassengerPhone = passengerPhone;
-    }
 }
