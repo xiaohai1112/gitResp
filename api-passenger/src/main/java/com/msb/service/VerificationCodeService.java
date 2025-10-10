@@ -5,7 +5,9 @@ import com.alibaba.nacos.common.utils.StringUtils;
 import com.msb.constant.CommonStatusEnum;
 import com.msb.dao.ResponseResult;
 import com.msb.dao.TokenResponse;
+import com.msb.remote.ServicePassengerUserClient;
 import com.msb.remote.VerificationCodeClient;
+import com.msb.request.VerificationCodeDTO;
 import com.msb.responese.NumberCodeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -21,6 +23,9 @@ public class VerificationCodeService {
     private VerificationCodeClient verificationCodeClient;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+
+    @Autowired
+    private ServicePassengerUserClient servicePassengerUserClient;
 
     /**
      * 生成验证码
@@ -82,6 +87,9 @@ public class VerificationCodeService {
 
         //判断原来是否有用户，并处理
         System.out.println("判断原来是否有用户，并处理");
+        VerificationCodeDTO verificationCodeDTO = new VerificationCodeDTO();
+        verificationCodeDTO.setPassengerPhone(passengerPhone);
+        servicePassengerUserClient.loginOrRegister(verificationCodeDTO);
         //返回token
         System.out.println("返回token");
         TokenResponse tokenResponse = new TokenResponse();
