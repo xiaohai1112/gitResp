@@ -2,7 +2,9 @@ package com.msb.service;
 
 
 import com.alibaba.nacos.common.utils.StringUtils;
+import com.msb.Utils.JwtUtils;
 import com.msb.constant.CommonStatusEnum;
+import com.msb.constant.IdentyConstant;
 import com.msb.dao.ResponseResult;
 import com.msb.dao.TokenResponse;
 import com.msb.remote.ServicePassengerUserClient;
@@ -90,6 +92,8 @@ public class VerificationCodeService {
         VerificationCodeDTO verificationCodeDTO = new VerificationCodeDTO();
         verificationCodeDTO.setPassengerPhone(passengerPhone);
         servicePassengerUserClient.loginOrRegister(verificationCodeDTO);
+        //发令牌
+        String s = JwtUtils.generatorToken(passengerPhone, IdentyConstant.IDENTY_A);
         //返回token
         System.out.println("返回token");
         TokenResponse tokenResponse = new TokenResponse();
