@@ -3,8 +3,10 @@ package com.msb.service;
 
 import com.alibaba.nacos.common.utils.StringUtils;
 import com.msb.Utils.JwtUtils;
+import com.msb.Utils.RedisPrefixUtils;
 import com.msb.constant.CommonStatusEnum;
 import com.msb.constant.IdentyConstant;
+import com.msb.constant.TokenConstant;
 import com.msb.dao.ResponseResult;
 import com.msb.dao.TokenResponse;
 import com.msb.remote.ServicePassengerUserClient;
@@ -19,10 +21,6 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class VerificationCodeService {
-    //验证码前缀
-    private String verificationCodePrefix="passenger-verification-code";
-    //token前缀
-    private String tokenPrefix="token-";
     @Autowired
     private VerificationCodeClient verificationCodeClient;
     @Autowired
@@ -46,34 +44,14 @@ public class VerificationCodeService {
 
         System.out.println("存入redis");
         //设置key、value、ttl（过期时间）
-        String key = generatorKeyPhone(passengerPhone);
+        String key = RedisPrefixUtils.generatorKeyPhone(passengerPhone);
         //存入redis
         stringRedisTemplate.opsForValue().set(key,numberCode1+"",2, TimeUnit.MINUTES);
-
 
         //不想data为null值，可以传一个“”字符串  eg:ResponseResult.success("");
         return ResponseResult.success();
     }
 
-    /**
-     * 根据手机号生成key
-     * @param passengerPhone
-     * @return
-     */
-
-    public String generatorKeyPhone(String passengerPhone){
-        return verificationCodePrefix + passengerPhone;
-    }
-
-    /**
-     * 根据手机号和身份标识生成token
-     * @param passengerPhone
-     * @param identy
-     * @return
-     */
-    public String generatorKeyToken(String passengerPhone,String identy){
-        return tokenPrefix+passengerPhone+"-"+identy;
-    }
 
     /**
      * 校验验证码
@@ -85,7 +63,7 @@ public class VerificationCodeService {
         //根据手机号从redis中读取验证码
         System.out.println("根据手机号从redis中读取验证码");
         //生成key
-        String key=generatorKeyPhone(passengerPhone);
+        String key= RedisPrefixUtils.generatorKeyPhone(passengerPhone);
         //校验验证码
         System.out.println("校验验证码");
         //根据key取value
@@ -105,15 +83,20 @@ public class VerificationCodeService {
         verificationCodeDTO.setPassengerPhone(passengerPhone);
         servicePassengerUserClient.loginOrRegister(verificationCodeDTO);
         //发令牌
-        String token = JwtUtils.generatorToken(passengerPhone, IdentyConstant.IDENTY_A);
-        //将token存入redis
-        String tokenkey = generatorKeyToken(passengerPhone, IdentyConstant.IDENTY_A);
+        String accessToken = JwtUtils.generatorToken(passengerPhone, IdentyConstant.IDENTY_A, TokenConstant.ACCESS_TOKEN_TYPE);
+        String refreshToken = JwtUtils.generatorToken(passengerPhone, IdentyConstant.IDENTY_A, TokenConstant.REFRESH_TOKEN_TYPE);
 
-        stringRedisTemplate.opsForValue().set(tokenkey,token,30,TimeUnit.DAYS);
+        //将token存入redis
+        String accessTokenkey = RedisPrefixUtils.generatorKeyToken(passengerPhone, IdentyConstant.IDENTY_A,TokenConstant.ACCESS_TOKEN_TYPE);
+        stringRedisTemplate.opsForValue().set(accessTokenkey,accessToken,30,TimeUnit.DAYS);
+        String refreshTokenkey = RedisPrefixUtils.generatorKeyToken(passengerPhone, IdentyConstant.IDENTY_A,TokenConstant.REFRESH_TOKEN_TYPE);
+        stringRedisTemplate.opsForValue().set(refreshTokenkey,refreshToken,35,TimeUnit.DAYS);
+
         //返回token
         System.out.println("返回token");
         TokenResponse tokenResponse = new TokenResponse();
-        tokenResponse.setToken(token);
+        tokenResponse.setAccessToken(accessToken);
+        tokenResponse.setRefreshToken(refreshToken);
         return ResponseResult.success(tokenResponse);
     }
 }
