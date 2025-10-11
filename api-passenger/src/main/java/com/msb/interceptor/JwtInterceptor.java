@@ -29,8 +29,8 @@ public class JwtInterceptor implements HandlerInterceptor {
         }catch (TokenExpiredException e){
             resultString="token time out";
             result = false;
-        }catch (AlgorithmMismatchException e){
-            resultString="AlgorithmMismatchException";
+        }catch (AlgorithmMismatchException e) {
+            resultString = "AlgorithmMismatchException";
             result = false;
         }catch (Exception e){
             resultString="token inval";

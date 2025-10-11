@@ -13,10 +13,12 @@ public class TestController {
         return "test.......";
     }
     @GetMapping("/authTest")
+    @ResponseBody
     public ResponseResult authTest(){
         return ResponseResult.success("auth 1");
     }
     @GetMapping("/noauthTest")
+    @ResponseBody
     public ResponseResult noAuthTest(){
         return ResponseResult.success("no auth 1");
     }

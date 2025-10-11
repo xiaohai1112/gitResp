@@ -21,6 +21,8 @@ import java.util.concurrent.TimeUnit;
 public class VerificationCodeService {
     //验证码前缀
     private String verificationCodePrefix="passenger-verification-code";
+    //token前缀
+    private String tokenPrefix="token-";
     @Autowired
     private VerificationCodeClient verificationCodeClient;
     @Autowired
@@ -64,6 +66,16 @@ public class VerificationCodeService {
     }
 
     /**
+     * 根据手机号和身份标识生成token
+     * @param passengerPhone
+     * @param identy
+     * @return
+     */
+    public String generatorKeyToken(String passengerPhone,String identy){
+        return tokenPrefix+passengerPhone+"-"+identy;
+    }
+
+    /**
      * 校验验证码
      * @param passengerPhone 手机号
      * @param verificationCode 验证码
@@ -93,11 +105,15 @@ public class VerificationCodeService {
         verificationCodeDTO.setPassengerPhone(passengerPhone);
         servicePassengerUserClient.loginOrRegister(verificationCodeDTO);
         //发令牌
-        String s = JwtUtils.generatorToken(passengerPhone, IdentyConstant.IDENTY_A);
+        String token = JwtUtils.generatorToken(passengerPhone, IdentyConstant.IDENTY_A);
+        //将token存入redis
+        String tokenkey = generatorKeyToken(passengerPhone, IdentyConstant.IDENTY_A);
+
+        stringRedisTemplate.opsForValue().set(tokenkey,token,30,TimeUnit.DAYS);
         //返回token
         System.out.println("返回token");
         TokenResponse tokenResponse = new TokenResponse();
-        tokenResponse.setToken(s);
+        tokenResponse.setToken(token);
         return ResponseResult.success(tokenResponse);
     }
 }

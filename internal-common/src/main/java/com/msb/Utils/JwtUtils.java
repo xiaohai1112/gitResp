@@ -33,7 +33,7 @@ public class JwtUtils {
             builder.withClaim(k,v);
         });
         //整合时间
-        builder.withExpiresAt(date);
+//        builder.withExpiresAt(date);
         String sign = builder.sign(Algorithm.HMAC256(SING));
         return sign;
     }
