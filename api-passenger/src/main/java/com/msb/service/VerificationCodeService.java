@@ -97,7 +97,7 @@ public class VerificationCodeService {
         //返回token
         System.out.println("返回token");
         TokenResponse tokenResponse = new TokenResponse();
-        tokenResponse.setToken("token value");
+        tokenResponse.setToken(s);
         return ResponseResult.success(tokenResponse);
     }
 }
