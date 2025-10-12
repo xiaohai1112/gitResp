@@ -38,10 +38,9 @@ public class TokenService {
         String refreshToken = JwtUtils.generatorToken(phone, identy, TokenConstant.ACCESS_TOKEN_TYPE);
 
         String accessTokenKey = RedisPrefixUtils.generatorKeyToken(phone, identy, TokenConstant.ACCESS_TOKEN_TYPE);
-//        stringRedisTemplate.opsForValue().set(accessTokenKey,accessToken,30, TimeUnit.DAYS);
-//        stringRedisTemplate.opsForValue().set(refreshTokenKey,refreshToken,35,TimeUnit.DAYS);
-        stringRedisTemplate.opsForValue().set(accessTokenKey,accessToken,10, TimeUnit.SECONDS);
-        stringRedisTemplate.opsForValue().set(refreshTokenKey,refreshToken,50,TimeUnit.SECONDS);
+        stringRedisTemplate.opsForValue().set(accessTokenKey,accessToken,30, TimeUnit.DAYS);
+        stringRedisTemplate.opsForValue().set(refreshTokenKey,refreshToken,35,TimeUnit.DAYS);
+
 
         TokenResponse tokenResponse = new TokenResponse();
         tokenResponse.setAccessToken(accessToken);
