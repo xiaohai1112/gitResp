@@ -88,9 +88,11 @@ public class VerificationCodeService {
 
         //将token存入redis
         String accessTokenkey = RedisPrefixUtils.generatorKeyToken(passengerPhone, IdentyConstant.IDENTY_A,TokenConstant.ACCESS_TOKEN_TYPE);
-        stringRedisTemplate.opsForValue().set(accessTokenkey,accessToken,30,TimeUnit.DAYS);
+//        stringRedisTemplate.opsForValue().set(accessTokenkey,accessToken,30,TimeUnit.DAYS);
         String refreshTokenkey = RedisPrefixUtils.generatorKeyToken(passengerPhone, IdentyConstant.IDENTY_A,TokenConstant.REFRESH_TOKEN_TYPE);
-        stringRedisTemplate.opsForValue().set(refreshTokenkey,refreshToken,35,TimeUnit.DAYS);
+//        stringRedisTemplate.opsForValue().set(refreshTokenkey,refreshToken,35,TimeUnit.DAYS);
+        stringRedisTemplate.opsForValue().set(accessTokenkey,accessToken,10, TimeUnit.SECONDS);
+        stringRedisTemplate.opsForValue().set(refreshTokenkey,refreshToken,50,TimeUnit.SECONDS);
 
         //返回token
         System.out.println("返回token");

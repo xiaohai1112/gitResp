@@ -22,16 +22,19 @@ public class JwtUtils {
     public static final String JWT_KEY_PHONE="phone";
     public static final String JWT_KEY_IDENTY="identy";//身份
     public static final String JWT_TOKEN_TYPE="tokenType";//token的类型
+    public static final String JWT_TOKEN_TIME="tokenTime";//token的类型
     //生成Token
     public static String generatorToken(String passengerPhone,String identy,String tokenType){
         Map<String,String> map =new HashMap<>();
         map.put(JWT_KEY_PHONE,passengerPhone);
         map.put(JWT_KEY_IDENTY,identy);
         map.put(JWT_TOKEN_TYPE,tokenType);
-        //设置token过期时间
-        Calendar calendar=Calendar.getInstance();
-        calendar.add(Calendar.DATE,1);
-        Date date=calendar.getTime();
+//        //设置token过期时间
+//        Calendar calendar=Calendar.getInstance();
+//        calendar.add(Calendar.DATE,1);
+//        Date date=calendar.getTime();
+        //防止每次生成的token一样
+        map.put(JWT_TOKEN_TIME,Calendar.getInstance().getTime().toString());
 
         JWTCreator.Builder builder = JWT.create();
         //整合map
@@ -67,7 +70,7 @@ public class JwtUtils {
         }catch (Exception e){
 
         }
-        return null;
+        return tokenRequest;
     }
 
     public static void main(String[] args) {
