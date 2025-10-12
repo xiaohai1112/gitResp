@@ -4,7 +4,11 @@ import lombok.Getter;
 
 public enum CommonStatusEnum {
     /**
-     * 验证码错误提示信息
+     * token错误提示信息1100-1199
+     */
+    TOKEN_ERROR(1199,"token错误"),
+    /**
+     * 验证码错误提示信息 1000-1099
      */
     VERIFICATION_CODE_ERROR(1099,"验证码错误"),
     SUCCESS(1,"success"),

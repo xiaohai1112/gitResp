@@ -1,10 +1,7 @@
 package com.msb.interceptor;
 
-import com.alibaba.csp.sentinel.cluster.TokenResult;
-import com.auth0.jwt.exceptions.AlgorithmMismatchException;
-import com.auth0.jwt.exceptions.SignatureVerificationException;
-import com.auth0.jwt.exceptions.TokenExpiredException;
 
+import com.alibaba.cloud.commons.lang.StringUtils;
 import com.msb.Utils.JwtUtils;
 import com.msb.Utils.RedisPrefixUtils;
 import com.msb.constant.TokenConstant;
@@ -13,7 +10,6 @@ import com.msb.dao.ResponseResult;
 import com.msb.request.TokenRequest;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -31,22 +27,7 @@ public class JwtInterceptor implements HandlerInterceptor {
         String resultString = "";
         String token = request.getHeader("Authorization");
         //解析token
-        TokenRequest tokenRequest=null;
-        try {
-            tokenRequest = JwtUtils.parseToken(token);
-        }catch (SignatureVerificationException e){
-            resultString = "token sign error";
-            result = false;
-        }catch (TokenExpiredException e){
-            resultString="token time out";
-            result = false;
-        }catch (AlgorithmMismatchException e) {
-            resultString = "AlgorithmMismatchException";
-            result = false;
-        }catch (Exception e){
-            resultString="token inval";
-            result = false;
-        }
+        TokenRequest tokenRequest = JwtUtils.checkToken(token);
 
 
         if (tokenRequest==null){
@@ -59,14 +40,9 @@ public class JwtInterceptor implements HandlerInterceptor {
             String tokenKey = RedisPrefixUtils.generatorKeyToken(phone, identy, TokenConstant.ACCESS_TOKEN_TYPE);
             //从redis中取出token
             String tokenRdis = stringRedisTemplate.opsForValue().get(tokenKey);
-            if (tokenRdis==null){
+            if ((StringUtils.isBlank(tokenRdis)) || (!token.trim().equals(tokenRdis.trim())) ){
                 resultString="token inval";
                 result = false;
-            }else {
-                if (!token.trim().equals(tokenRdis.trim())){
-                    resultString="token inval";
-                    result = false;
-                }
             }
         }
         
