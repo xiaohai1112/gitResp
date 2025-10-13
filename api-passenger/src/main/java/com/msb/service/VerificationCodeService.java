@@ -8,7 +8,7 @@ import com.msb.constant.CommonStatusEnum;
 import com.msb.constant.IdentyConstant;
 import com.msb.constant.TokenConstant;
 import com.msb.dao.ResponseResult;
-import com.msb.dao.TokenResponse;
+import com.msb.responese.TokenResponse;
 import com.msb.remote.ServicePassengerUserClient;
 import com.msb.remote.VerificationCodeClient;
 import com.msb.request.VerificationCodeDTO;

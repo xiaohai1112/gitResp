@@ -1,0 +1,21 @@
+package com.msb.constant;
+
+public class UrlDirectionConstant {
+    /**
+     * 请求url的固定头
+     */
+    public static final String DIRECTION_URL="https://restapi.amap.com/v3/direction/driving?";
+    /**
+     * 解析接口中参数
+     * status
+     * route
+     * paths
+     * distance
+     * duration
+     */
+    public static final String STATUS="status";
+    public static final String ROUTE="route";
+    public static final String PATHS="paths";
+    public static final String DISTANCE="distance";
+    public static final String DURATION="duration";
+}

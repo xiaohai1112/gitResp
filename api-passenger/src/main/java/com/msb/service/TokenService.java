@@ -6,7 +6,7 @@ import com.msb.Utils.RedisPrefixUtils;
 import com.msb.constant.CommonStatusEnum;
 import com.msb.constant.TokenConstant;
 import com.msb.dao.ResponseResult;
-import com.msb.dao.TokenResponse;
+import com.msb.responese.TokenResponse;
 import com.msb.request.TokenRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;

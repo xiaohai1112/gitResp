@@ -1,4 +1,4 @@
-package com.msb.dao;
+package com.msb.responese;
 
 import lombok.Data;
 

@@ -1,7 +1,7 @@
 package com.msb.controller;
 
 import com.msb.dao.ResponseResult;
-import com.msb.dao.TokenResponse;
+import com.msb.responese.TokenResponse;
 import com.msb.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

@@ -2,14 +2,20 @@ package com.msb.servicemap.service;
 
 import com.msb.dao.ResponseResult;
 import com.msb.responese.DistanceResponse;
+import com.msb.servicemap.remote.MapDirectionClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class DistanceService {
-    public ResponseResult driving(String depLongitude,String depLatitude,String destLongitude,String destLatitude){
-        DistanceResponse distanceResponse = new DistanceResponse();
-        distanceResponse.setDistance(12);
-        distanceResponse.setDuration(1);
-        return ResponseResult.success(distanceResponse);
+    private static final Logger log = LoggerFactory.getLogger(DistanceService.class);
+    @Autowired
+    private MapDirectionClient mapDirectionClient;
+    public ResponseResult driving(String depLongitude, String depLatitude, String destLongitude, String destLatitude){
+        //调用第三方地图
+        DistanceResponse direction = mapDirectionClient.direction(depLongitude, depLatitude, destLongitude, destLatitude);
+        return ResponseResult.success(direction);
     }
 }
