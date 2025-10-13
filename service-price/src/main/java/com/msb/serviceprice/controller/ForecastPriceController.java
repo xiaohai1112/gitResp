@@ -1,12 +1,12 @@
-package com.msb.controller;
+package com.msb.serviceprice.controller;
 
 import com.msb.dao.ResponseResult;
 import com.msb.request.ForecastPriceDTO;
-import com.msb.service.ForecastPriceService;
+
+import com.msb.serviceprice.service.ForecastPriceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
