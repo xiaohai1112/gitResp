@@ -15,6 +15,10 @@ public enum CommonStatusEnum {
      * 用户不存在1120-1299 exist
      */
     USER_NOT_EXIST(1299,"用户不存在"),
+    /**
+     * 计价规则不存在1300-1399
+     */
+    PICE_RULE_NOT_EXIST(1300,"计价规则不存在"),
     SUCCESS(1,"success"),
     FAIL(0,"fail");
     @Getter
