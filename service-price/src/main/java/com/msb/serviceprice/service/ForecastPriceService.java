@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,12 +48,71 @@ public class ForecastPriceService {
         map.put("vehicle_type","1");
         List<PriceRule> priceRules = priceRuleMapper.selectByMap(map);
         if (priceRules.size()==0){
-            return ResponseResult.fail(CommonStatusEnum.PICE_RULE_NOT_EXIST);
+            return ResponseResult.fail(CommonStatusEnum.PICE_RULE_NOT_EXIST.getCode(),CommonStatusEnum.PICE_RULE_NOT_EXIST.getValue());
         }
-        PriceRule priceRule = new PriceRule();
+        PriceRule priceRule = priceRules.get(0);
         log.info("根据距离、时长和计价规则，计算价格");
+        double price = getprice(distance, duration, priceRule);
+
         ForecastPriceResponese forecastPriceResponese = new ForecastPriceResponese();
-        forecastPriceResponese.setPrice(13.14);
+        forecastPriceResponese.setPrice(price);
         return ResponseResult.success(forecastPriceResponese);
     }
+
+    /**
+     * 根据距离、时长和计价规则来计算最终价格
+     * @param distance 距离
+     * @param duration 时长
+     * @param priceRule 计价规则
+     * @return
+     */
+
+    private static double getprice(Integer distance,Integer duration,PriceRule priceRule){
+        BigDecimal price = new BigDecimal(0);
+        //起步价
+        Double startFare = priceRule.getStartFare();
+        BigDecimal startFareDecimal = new BigDecimal(startFare);
+        price=price.add(startFareDecimal);
+
+        //总里程 m
+        BigDecimal distanceDecimal = new BigDecimal(distance);
+        //总里程 km                                                      /1000              保留2位小数         四舍五入
+        BigDecimal distanceMileDecimal = distanceDecimal.divide(new BigDecimal(1000), 2, BigDecimal.ROUND_HALF_UP);
+        Integer startMile = priceRule.getStartMile();
+        //起步里程
+        BigDecimal startMileDecimal = new BigDecimal(startMile);
+        //多出里程
+        double distanceSubtract = distanceMileDecimal.subtract(startMileDecimal).doubleValue();
+        //最终收费里程
+        Double mile = distanceSubtract > 0 ? distanceSubtract : 0;
+        BigDecimal mileDecimal = new BigDecimal(mile);
+        //计价单元 元/km
+        Double unitPricePerMile = priceRule.getUnitPricePerMile();
+        BigDecimal unitPricePerMileDecimal = new BigDecimal(unitPricePerMile);
+        //里程价
+        BigDecimal multiply = mileDecimal.multiply(unitPricePerMileDecimal).setScale(2,BigDecimal.ROUND_HALF_UP);
+        price=price.add(multiply);
+        //总时长 秒
+        BigDecimal durationDecimal = new BigDecimal(duration);
+        //总时长 分
+        BigDecimal durationMinDecimal = durationDecimal.divide(new BigDecimal(60),2,BigDecimal.ROUND_HALF_UP);
+        //计时单价
+        Double unitPricePerMinute = priceRule.getUnitPricePerMinute();
+        BigDecimal unitPricePerMinuteDecimal = new BigDecimal(unitPricePerMinute);
+        //时长价
+        BigDecimal piceMultiply = durationMinDecimal.multiply(unitPricePerMinuteDecimal);
+        price=price.add(piceMultiply).setScale(2,BigDecimal.ROUND_HALF_UP);
+
+        return price.doubleValue();
+    }
+
+//    public static void main(String[] args) {
+//        PriceRule priceRule = new PriceRule();
+//        priceRule.setStartFare(10.0);
+//        priceRule.setStartMile(3);
+//        priceRule.setUnitPricePerMile(1.8);
+//        priceRule.setUnitPricePerMinute(0.5);
+//        double getprice = getprice(6500, 1800, priceRule);
+//        System.out.println(getprice);
+//    }
 }
