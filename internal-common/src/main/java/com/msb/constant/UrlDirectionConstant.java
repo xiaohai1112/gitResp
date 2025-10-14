@@ -2,9 +2,13 @@ package com.msb.constant;
 
 public class UrlDirectionConstant {
     /**
-     * 请求url的固定头
+     * 请求url的固定头  地理位置
      */
     public static final String DIRECTION_URL="https://restapi.amap.com/v3/direction/driving?";
+    /**
+     * 请求url的固定头  地区
+     */
+    public static final String DISTRICT_URL="https://restapi.amap.com/v3/config/district?";
     /**
      * 解析接口中参数
      * status
