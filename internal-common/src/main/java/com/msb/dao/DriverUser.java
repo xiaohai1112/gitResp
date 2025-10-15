@@ -3,6 +3,7 @@ package com.msb.dao;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -86,8 +87,8 @@ public class DriverUser {
     private Integer flag;
 
     // 创建时间
-    private Date gmtCreate;
+    private LocalDateTime gmtCreate;
 
     // 修改时间
-    private Date gmtModified;
+    private LocalDateTime gmtModified;
 }
