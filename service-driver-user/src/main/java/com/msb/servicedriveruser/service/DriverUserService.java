@@ -21,4 +21,10 @@ public class DriverUserService {
         driverUser.setGmtModified(now);
         return ResponseResult.success(driverUserMapper.insert(driverUser));
     }
+    public ResponseResult updateDriverUser(DriverUser driverUser){
+        LocalDateTime now=LocalDateTime.now();
+        driverUser.setGmtModified(now);
+        driverUserMapper.updateById(driverUser);
+        return ResponseResult.success();
+    }
 }
