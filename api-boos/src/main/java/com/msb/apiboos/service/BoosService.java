@@ -11,6 +11,9 @@ public class BoosService {
     @Autowired
     private ServiceDriverUserClient serviceDriverUserClient;
     public ResponseResult addDriver(DriverUser driverUser){
-        return ResponseResult.success(serviceDriverUserClient.driver(driverUser));
+        return ResponseResult.success(serviceDriverUserClient.addDriver(driverUser));
+    }
+    public ResponseResult updateDriver(DriverUser driverUser){
+        return ResponseResult.success(serviceDriverUserClient.updateDriver(driverUser));
     }
 }

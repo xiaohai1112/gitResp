@@ -5,6 +5,7 @@ import com.msb.dao.DriverUser;
 import com.msb.dao.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,5 +16,9 @@ public class BoosController {
     @PostMapping("/driver-user")
     public ResponseResult add(@RequestBody DriverUser driverUser){
         return boosService.addDriver(driverUser);
+    }
+    @PutMapping("/driver-user")
+    public ResponseResult update(@RequestBody DriverUser driverUser){
+        return boosService.updateDriver(driverUser);
     }
 }
