@@ -2,7 +2,9 @@ package com.msb.dao;
 
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.Date;
+
 @Data
 public class DriverUser {
     // 主键ID
@@ -21,7 +23,7 @@ public class DriverUser {
     private String driverGender;
 
     // 出生日期
-    private Date driverBrithday;  // 注意：表中字段名是driver_brithday（可能是birthday的拼写错误，建议保持一致）
+    private LocalDate driverBrithday;  // 注意：表中字段名是driver_brithday（可能是birthday的拼写错误，建议保持一致）
 
     // 司机民族
     private String driverNation;
@@ -33,13 +35,13 @@ public class DriverUser {
     private String licenseId;
 
     // 初次领取驾驶证的日期
-    private Date getDriverLicenseDate;
+    private LocalDate getDriverLicenseDate;
 
     // 驾驶证有效期限起
-    private Date driverLicenseOn;
+    private LocalDate driverLicenseOn;
 
     // 驾驶证有效期限止
-    private Date driverLicenseOff;
+    private LocalDate driverLicenseOff;
 
     // 是否巡游出租汽车司机（0：否；1：是）
     private Integer taxiDriver;
@@ -51,19 +53,19 @@ public class DriverUser {
     private String networkCarIssueOrganization;
 
     // 资格证发证日期
-    private Date networkCarIssueDate;
+    private LocalDate networkCarIssueDate;
 
     // 初次领取资格证日期
-    private Date getNetworkCarProofDate;
+    private LocalDate getNetworkCarProofDate;
 
     // 资格证有效起始日期
-    private Date networkCarProofOn;
+    private LocalDate networkCarProofOn;
 
     // 资格证有效截止日期
-    private Date networkCarProofOff;
+    private LocalDate networkCarProofOff;
 
     // 报备日期
-    private Date registerDate;
+    private LocalDate registerDate;
 
     // 商业类型（1:网络预约出租汽车；2：巡游出租汽车；3：私人小客车合乘）
     private Integer commercialType;
@@ -72,10 +74,10 @@ public class DriverUser {
     private String contractCompany;
 
     // 合同有效期起
-    private Date contractOn;
+    private LocalDate contractOn;
 
     // 合同有效期止
-    private Date contractOff;
+    private LocalDate contractOff;
 
     // 状态（0:有效 1：失效）
     private Integer state;
