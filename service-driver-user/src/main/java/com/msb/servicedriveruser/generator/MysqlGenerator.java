@@ -18,7 +18,7 @@ public class MysqlGenerator {
                             "D:\\Java\\Onlie-taxi-public\\service-driver-user\\src\\main\\java\\com\\msb\\servicedriveruser\\mapper"));
                 })
                 .strategyConfig(builder -> {
-                    builder.addInclude("car");
+                    builder.addInclude("driver_car_binding_relationship");
                 })
                 .templateEngine(new FreemarkerTemplateEngine())
                 .execute();

@@ -4,7 +4,11 @@ package com.msb.servicedriveruser.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.msb.dao.Car;
 import com.msb.dao.ResponseResult;
+import com.msb.servicedriveruser.mapper.CarMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -14,8 +18,17 @@ import org.springframework.stereotype.Service;
  * @author child
  * @since 2025-10-16
  */
-public interface ICarService extends IService<Car> {
+@Service
+public class ICarService {
 
-    public ResponseResult addCar(Car car);
+    @Autowired
+    private CarMapper carMapper;
+    public ResponseResult addCar(Car car) {
+        LocalDateTime now=LocalDateTime.now();
+        car.setGmtCreate(now);
+        car.setGmtModified(now);
+        carMapper.insert(car);
+        return ResponseResult.success("");
+    }
 
 }
