@@ -26,6 +26,7 @@ public enum CommonStatusEnum {
     CAR_BIND_EXIST(1402,"车辆已被绑定"),
     DRIVER_CAR_BIND_EXIST(1403,"司机和车辆已被绑定，请勿重复绑定"),
     DRIVER_CAR_BIND_NOT_EXIST(1404,"司机与车辆关系不存在"),
+    DRIVER_NOT_EXIST(1405,"司机不存在"),
     SUCCESS(1,"success"),
     FAIL(0,"fail");
     @Getter

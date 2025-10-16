@@ -2,12 +2,10 @@ package com.msb.servicedriveruser.controller;
 
 import com.msb.dao.DriverUser;
 import com.msb.dao.ResponseResult;
+import com.msb.responese.DriverUserExistsResponse;
 import com.msb.servicedriveruser.service.DriverUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserController {
@@ -20,5 +18,27 @@ public class UserController {
     @PutMapping("/user")
     public ResponseResult updateUser(@RequestBody DriverUser driverUser){
         return driverUserService.updateDriverUser(driverUser);
+    }
+
+    /**
+     * 根据手机号查询司机
+     * @param driverPhone
+     * @return
+     */
+    @GetMapping("/check-driver/{driverPhone}")
+    public ResponseResult find(@PathVariable("driverPhone") String driverPhone){
+        ResponseResult<DriverUser> driverUserByPhone = driverUserService.findDriverUserByPhone(driverPhone);
+        DriverUser driverUserByPhonedb = driverUserByPhone.getData();
+        DriverUserExistsResponse response = new DriverUserExistsResponse();
+        int isExist=1;
+        if (driverUserByPhonedb==null){
+            isExist=0;
+            response.setDriverPhone(driverPhone);
+            response.setIsExist(isExist);
+        }else{
+            response.setDriverPhone(driverUserByPhonedb.getDriverPhone());
+            response.setIsExist(isExist);
+        }
+        return ResponseResult.success(response);
     }
 }
