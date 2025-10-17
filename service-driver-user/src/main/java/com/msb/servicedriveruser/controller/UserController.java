@@ -1,5 +1,6 @@
 package com.msb.servicedriveruser.controller;
 
+import com.msb.constant.DriverCarConstant;
 import com.msb.dao.DriverUser;
 import com.msb.dao.ResponseResult;
 import com.msb.responese.DriverUserExistsResponse;
@@ -26,13 +27,13 @@ public class UserController {
      * @return
      */
     @GetMapping("/check-driver/{driverPhone}")
-    public ResponseResult find(@PathVariable("driverPhone") String driverPhone){
+    public ResponseResult<DriverUserExistsResponse> find(@PathVariable("driverPhone") String driverPhone){
         ResponseResult<DriverUser> driverUserByPhone = driverUserService.findDriverUserByPhone(driverPhone);
         DriverUser driverUserByPhonedb = driverUserByPhone.getData();
         DriverUserExistsResponse response = new DriverUserExistsResponse();
-        int isExist=1;
+        int isExist = DriverCarConstant.DRIVER_EXIST;
         if (driverUserByPhonedb==null){
-            isExist=0;
+            isExist = DriverCarConstant.DRIVER_NO_EXIST;
             response.setDriverPhone(driverPhone);
             response.setIsExist(isExist);
         }else{
