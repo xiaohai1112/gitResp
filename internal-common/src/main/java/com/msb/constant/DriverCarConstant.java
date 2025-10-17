@@ -22,4 +22,16 @@ public class DriverCarConstant {
      */
     public static final int DRIVER_NO_EXIST=0;
     public static final int DRIVER_EXIST=1;
+    /**
+     * 出车
+     */
+    public static final int DRIVER_WORK_STATUS_START=1;
+    /**
+     * 暂停接单
+     */
+    public static final int DRIVER_WORK_STATUS_PAUSE=2;
+    /**
+     * 收车
+     */
+    public static final int DRIVER_WORK_STATUS_STOP=0;
 }

@@ -3,8 +3,10 @@ package com.msb.servicedriveruser.service;
 import com.msb.constant.CommonStatusEnum;
 import com.msb.constant.DriverCarConstant;
 import com.msb.dao.DriverUser;
+import com.msb.dao.DriverUserWorkStatus;
 import com.msb.dao.ResponseResult;
 import com.msb.servicedriveruser.mapper.DriverUserMapper;
+import com.msb.servicedriveruser.mapper.DriverUserWorkStatusMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
@@ -17,6 +19,8 @@ import java.util.Map;
 public class DriverUserService {
     @Autowired
     private DriverUserMapper driverUserMapper;
+    @Autowired
+    private DriverUserWorkStatusMapper driverUserWorkStatusMapper;
     public ResponseResult test(){
         return ResponseResult.success(driverUserMapper.selectById(1));
     }
@@ -24,7 +28,15 @@ public class DriverUserService {
         LocalDateTime now = LocalDateTime.now();
         driverUser.setGmtCreate(now);
         driverUser.setGmtModified(now);
-        return ResponseResult.success(driverUserMapper.insert(driverUser));
+        driverUserMapper.insert(driverUser);
+        //初始化 司机状态表
+        DriverUserWorkStatus driverUserWorkStatus = new DriverUserWorkStatus();
+        driverUserWorkStatus.setDriverId(driverUser.getId());
+        driverUserWorkStatus.setWorkStatus(DriverCarConstant.DRIVER_WORK_STATUS_STOP);
+        driverUserWorkStatus.setGmtCreate(now);
+        driverUserWorkStatus.setGmtModified(now);
+        driverUserWorkStatusMapper.insert(driverUserWorkStatus);
+        return ResponseResult.success("");
     }
     public ResponseResult updateDriverUser(DriverUser driverUser){
         LocalDateTime now=LocalDateTime.now();
