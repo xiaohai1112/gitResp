@@ -1,11 +1,19 @@
 spring:
   cloud:
     nacos:
-      config:
+      config: #用于服务从 Nacos 读取配置文件时的认证
         server-addr: 127.0.0.1:8848
+        username: nacos
+        password: nacos
+      discovery: #用于服务向 Nacos 注册自身时的认证
+        server-addr: 127.0.0.1:8848
+        username: nacos
+        password: nacos
   application:
     name: api-passenger
   redis:
     host: 192.168.121.134
     port: 6379
     database: 0
+server:
+  port: 8080

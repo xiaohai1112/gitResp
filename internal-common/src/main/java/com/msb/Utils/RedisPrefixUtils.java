@@ -2,18 +2,19 @@ package com.msb.Utils;
 
 public class RedisPrefixUtils {
     //验证码前缀
-    public static String verificationCodePrefix="passenger-verification-code";
+    public static String verificationCodePrefix="verification-code";
     //token前缀
     public static String tokenPrefix="token-";
 
     /**
      * 根据手机号生成key
-     * @param passengerPhone
+     * @param phone
+     * @param identy
      * @return
      */
 
-    public static String generatorKeyPhone(String passengerPhone){
-        return verificationCodePrefix + passengerPhone;
+    public static String generatorKeyPhone(String phone,String identy){
+        return verificationCodePrefix +"-"+identy+"-"+ phone;
     }
 
     /**
