@@ -6,11 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/service")
 public class ServiceController {
     @Autowired
     private ServiceFromMapService serviceFromMapService;
-    @PostMapping("/service/add")
+    @PostMapping("/add")
     public ResponseResult add(String name){
-        return serviceFromMapService.addService(name);
+        return serviceFromMapService.add(name);
     }
 }
