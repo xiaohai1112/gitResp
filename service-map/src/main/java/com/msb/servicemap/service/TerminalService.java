@@ -1,6 +1,7 @@
 package com.msb.servicemap.service;
 
 import com.msb.dao.ResponseResult;
+import com.msb.responese.TerminalResponse;
 import com.msb.servicemap.remote.TerminalClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class TerminalService {
     @Autowired
     private TerminalClient terminalClient;
-    public ResponseResult add(String name){
+    public ResponseResult<TerminalResponse> add(String name){
         return terminalClient.add(name);
     }
 }
