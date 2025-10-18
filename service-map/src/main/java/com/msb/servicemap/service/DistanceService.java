@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class DistanceService {
-    private static final Logger log = LoggerFactory.getLogger(DistanceService.class);
     @Autowired
     private MapDirectionClient mapDirectionClient;
     public ResponseResult driving(String depLongitude, String depLatitude, String destLongitude, String destLatitude){

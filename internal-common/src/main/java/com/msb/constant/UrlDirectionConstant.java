@@ -10,6 +10,10 @@ public class UrlDirectionConstant {
      */
     public static final String DISTRICT_URL="https://restapi.amap.com/v3/config/district?";
     /**
+     * 请求url的固定头  服务
+     */
+    public static final String SERVICE_URL= "https://tsapi.amap.com/v1/track/service/add?";
+    /**
      * 解析接口中参数
      * status
      * route
