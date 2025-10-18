@@ -18,6 +18,10 @@ public class UrlDirectionConstant {
      */
     public static final String TERMINAL_URL= "https://tsapi.amap.com/v1/track/terminal/add?";
     /**
+     * 请求url的固定头  轨迹
+     */
+    public static final String  TRACK_URL="https://tsapi.amap.com/v1/track/trace/add?";
+    /**
      * 解析接口中参数
      * status
      * route

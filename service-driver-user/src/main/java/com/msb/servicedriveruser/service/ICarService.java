@@ -31,6 +31,7 @@ public class ICarService {
         LocalDateTime now=LocalDateTime.now();
         car.setGmtCreate(now);
         car.setGmtModified(now);
+        //获取tid
         ResponseResult<TerminalResponse> terminalResponseResponseResult = serviceMapClient.addTerminal(car.getVehicleNo());
         String tid = terminalResponseResponseResult.getData().getTid();
         car.setTid(tid);
