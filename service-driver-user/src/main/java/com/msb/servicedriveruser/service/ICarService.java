@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.msb.dao.Car;
 import com.msb.dao.ResponseResult;
 import com.msb.responese.TerminalResponse;
+import com.msb.responese.TrackResponse;
 import com.msb.servicedriveruser.mapper.CarMapper;
 import com.msb.servicedriveruser.romate.ServiceMapClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,12 @@ public class ICarService {
         ResponseResult<TerminalResponse> terminalResponseResponseResult = serviceMapClient.addTerminal(car.getVehicleNo());
         String tid = terminalResponseResponseResult.getData().getTid();
         car.setTid(tid);
+        //获取trid
+        ResponseResult<TrackResponse> trackResponseResponseResult = serviceMapClient.addTrace(tid);
+        String trid = trackResponseResponseResult.getData().getTrid();
+        String trname = trackResponseResponseResult.getData().getTrname();
+        car.setTrid(trid);
+        car.setTrname(trname);
         carMapper.insert(car);
         return ResponseResult.success("");
     }
