@@ -5,10 +5,7 @@ import com.msb.dao.Car;
 import com.msb.dao.ResponseResult;
 import com.msb.servicedriveruser.service.ICarService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -26,5 +23,8 @@ public class CarController {
     public ResponseResult add(@RequestBody Car car){
         return iCarService.addCar(car);
     }
-
+    @GetMapping("/car")
+    public ResponseResult<Car> getCarById(Long carId){
+        return iCarService.getCarById(carId);
+    }
 }
