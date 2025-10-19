@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class TerminalService {
     @Autowired
     private TerminalClient terminalClient;
-    public ResponseResult<TerminalResponse> add(String name){
-        return terminalClient.add(name);
+    public ResponseResult<TerminalResponse> add(String name,String desc){
+        return terminalClient.add(name,desc);
     }
 }

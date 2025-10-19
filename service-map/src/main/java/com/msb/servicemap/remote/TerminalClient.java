@@ -19,7 +19,7 @@ public class TerminalClient {
     private String sid;
     @Autowired
     private RestTemplate restTemplate;
-    public ResponseResult add(String name){
+    public ResponseResult add(String name,String desc){
         //拼接url
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(UrlDirectionConstant.TERMINAL_URL);
@@ -28,12 +28,16 @@ public class TerminalClient {
         stringBuilder.append("sid="+sid);
         stringBuilder.append("&");
         stringBuilder.append("name="+name);
+        stringBuilder.append("&");
+        stringBuilder.append("desc="+desc);
         /**
          *这是get请求  .getForEntity
          * post请求应用  .postForEntity
          */
+        System.out.println("创建端口请求："+stringBuilder.toString());
         ResponseEntity<String> forEntity = restTemplate.postForEntity(stringBuilder.toString(),null, String.class);
         String body = forEntity.getBody();
+        System.out.println("创建端口响应："+body);
         JSONObject jsonObject = JSONObject.fromObject(body);
         JSONObject data = jsonObject.getJSONObject("data");
         String tid = data.getString("tid");
