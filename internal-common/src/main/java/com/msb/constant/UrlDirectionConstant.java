@@ -26,6 +26,10 @@ public class UrlDirectionConstant {
      */
     public static final String POINT_URI="https://tsapi.amap.com/v1/track/point/upload?";
     /**
+     * 请求url的固定头  搜索周围车辆
+     */
+    public static final String ARPUNDSEARCH_URI="https://tsapi.amap.com/v1/track/terminal/aroundsearch?";
+    /**
      * 解析接口中参数
      * status
      * route
