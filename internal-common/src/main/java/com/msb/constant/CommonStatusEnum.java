@@ -19,6 +19,8 @@ public enum CommonStatusEnum {
      * 计价规则不存在1300-1399
      */
     PICE_RULE_NOT_EXIST(1300,"计价规则不存在"),
+    PICE_RULE_EXIST(1301,"计价规则存在"),
+    PICE_RULE_NO_CHANGE(1302,"计价规则无变化"),
     /**
      * 司机 车辆 错误信息提醒   1400-1499
      */
