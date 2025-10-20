@@ -1,5 +1,6 @@
 package com.msb.serviceprice.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.msb.Utils.BigDecimalUtils;
 import com.msb.constant.CommonStatusEnum;
 import com.msb.dao.PriceRule;
@@ -25,7 +26,7 @@ public class ForecastPriceService {
     private PriceRuleMapper priceRuleMapper;
     @Autowired
     private ServiceMapClient serviceMapClient;
-    public ResponseResult forecastPrice(String depLongitude, String depLatitude, String destLongitude, String destLatitude){
+    public ResponseResult forecastPrice(String depLongitude, String depLatitude, String destLongitude, String destLatitude,String cityCode,String vehicleType){
         log.info("出发经度："+depLongitude);
         log.info("出发纬度："+depLatitude);
         log.info("目的经度："+destLongitude);
@@ -44,10 +45,11 @@ public class ForecastPriceService {
         log.info("距离："+distance+",时长："+duration);
 
         log.info("读取计价规则");
-        Map<String,Object> map=new HashMap<>();
-        map.put("city_code","11000");
-        map.put("vehicle_type","1");
-        List<PriceRule> priceRules = priceRuleMapper.selectByMap(map);
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("city_code",cityCode);
+        queryWrapper.eq("vehicle_type",vehicleType);
+        queryWrapper.orderByDesc("fare_version");
+        List<PriceRule> priceRules = priceRuleMapper.selectList(queryWrapper);
         if (priceRules.size()==0){
             return ResponseResult.fail(CommonStatusEnum.PICE_RULE_NOT_EXIST.getCode(),CommonStatusEnum.PICE_RULE_NOT_EXIST.getValue());
         }
@@ -57,6 +59,8 @@ public class ForecastPriceService {
 
         ForecastPriceResponese forecastPriceResponese = new ForecastPriceResponese();
         forecastPriceResponese.setPrice(price);
+        forecastPriceResponese.setCityCode(cityCode);
+        forecastPriceResponese.setVehicleType(vehicleType);
         return ResponseResult.success(forecastPriceResponese);
     }
 
