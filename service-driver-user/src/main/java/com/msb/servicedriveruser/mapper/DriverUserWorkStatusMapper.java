@@ -1,4 +1,6 @@
 package com.msb.servicedriveruser.mapper;
+
+
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.msb.dao.DriverUserWorkStatus;
 import org.apache.ibatis.annotations.Mapper;
@@ -9,7 +11,7 @@ import org.apache.ibatis.annotations.Mapper;
  * </p>
  *
  * @author child
- * @since 2025-10-17
+ * @since 2025-10-20
  */
 @Mapper
 public interface DriverUserWorkStatusMapper extends BaseMapper<DriverUserWorkStatus> {

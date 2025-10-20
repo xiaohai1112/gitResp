@@ -6,6 +6,10 @@ import lombok.Data;
 import java.time.LocalDateTime;
 @Data
 public class OrderRequest {
+    //乘客id
+    private Long passengerId;
+    //乘客手机号
+    private String passengerPhone;
     //地区行政代码
     private String address;
     //订单编号
