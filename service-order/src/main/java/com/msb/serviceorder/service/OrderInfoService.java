@@ -10,6 +10,7 @@ import com.msb.dao.PriceRule;
 import com.msb.dao.ResponseResult;
 import com.msb.request.OrderRequest;
 import com.msb.serviceorder.mapper.OrderInfoMapper;
+import com.msb.serviceorder.romate.ServiceDriverUserClient;
 import com.msb.serviceorder.romate.ServicePriceClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,12 +31,22 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class OrderInfoService {
     @Autowired
+    ServiceDriverUserClient serviceDriverUserClient;
+    @Autowired
     private ServicePriceClient servicePriceClient;
     @Autowired
     OrderInfoMapper orderInfoMapper;
     @Autowired
     StringRedisTemplate stringRedisTemplate;
     public ResponseResult add(OrderRequest orderRequest){
+        //判断该地是否有可用司机
+        String cityCode=orderRequest.getAddress();
+        ResponseResult<Boolean> booleanResponseResult = serviceDriverUserClient.find(cityCode);
+        System.out.println(booleanResponseResult);
+        if (!booleanResponseResult.getData()){
+            return ResponseResult.fail(CommonStatusEnum.DRIVER_NOT_CITY.getCode(),CommonStatusEnum.DRIVER_NOT_CITY.getValue());
+        }
+
         //判断计价规则的版本是否是最新的版本
 //        ResponseResult<Boolean> latestVersion = servicePriceClient.isLatestVersion(orderRequest.getFareType(), orderRequest.getFareVersion());
 //        if (!latestVersion.getData()){

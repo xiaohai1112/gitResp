@@ -20,3 +20,4 @@ logging:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  #打印日志到控制台
+  mapper-locations: classpath:mapper/*.xml

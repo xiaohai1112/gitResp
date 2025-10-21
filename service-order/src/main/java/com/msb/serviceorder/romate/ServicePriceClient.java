@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 @FeignClient("service-price")
 public interface ServicePriceClient {
     @RequestMapping(method = RequestMethod.GET,value = "/price/is-latest-version")
-    public ResponseResult<Boolean> isLatestVersion(@RequestParam String fareType, @RequestParam Integer fareVersion);
+    public ResponseResult<Boolean> isLatestVersion(@RequestParam String fareType);
     @RequestMapping(method = RequestMethod.POST,value = "/price/is-exits")
     public ResponseResult<Boolean> isExits(@RequestBody PriceRule priceRule);
 }
