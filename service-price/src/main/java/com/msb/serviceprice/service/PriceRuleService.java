@@ -8,6 +8,7 @@ import com.msb.serviceprice.mapper.PriceRuleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.HashMap;
 import java.util.List;
@@ -88,5 +89,30 @@ public class PriceRuleService {
         priceRule.setFareVersion(++fareVersion);
         priceRuleMapper.insert(priceRule);
         return ResponseResult.success();
+    }
+
+    public ResponseResult<PriceRule> checkLatestVersion(String fareType){
+        QueryWrapper<PriceRule> priceRuleQueryWrapper = new QueryWrapper<>();
+        priceRuleQueryWrapper.eq("fare_Type",fareType);
+        priceRuleQueryWrapper.orderByDesc("fare_version");
+        List<PriceRule> priceRules = priceRuleMapper.selectList(priceRuleQueryWrapper);
+        if (priceRules.size()>0){
+            return ResponseResult.success(priceRules.get(0));
+        }else {
+            return ResponseResult.fail(CommonStatusEnum.PICE_RULE_NOT_EXIST.getCode(),CommonStatusEnum.PICE_RULE_NOT_EXIST.getValue());
+        }
+    }
+    public ResponseResult<Boolean> isLatestVersion(String fareType,Integer fareVersion){
+        ResponseResult<PriceRule> priceRuleResponseResult = checkLatestVersion(fareType);
+        if (priceRuleResponseResult.getCode()==CommonStatusEnum.PICE_RULE_NOT_EXIST.getCode()){
+            return ResponseResult.fail(CommonStatusEnum.PICE_RULE_NOT_EXIST.getCode(),CommonStatusEnum.PICE_RULE_NOT_EXIST.getValue());
+        }else {
+            Integer fareVersionDB = priceRuleResponseResult.getData().getFareVersion();
+            if (fareVersion<fareVersionDB){
+                return ResponseResult.success(false);
+            }else {
+                return ResponseResult.success(true);
+            }
+        }
     }
 }

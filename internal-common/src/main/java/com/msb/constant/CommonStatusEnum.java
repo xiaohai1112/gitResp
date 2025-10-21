@@ -21,6 +21,7 @@ public enum CommonStatusEnum {
     PICE_RULE_NOT_EXIST(1300,"计价规则不存在"),
     PICE_RULE_EXIST(1301,"计价规则存在"),
     PICE_RULE_NO_CHANGE(1302,"计价规则无变化"),
+    PICE_RULE_NOT_NEW(1304,"计价规则不是最新"),
     /**
      * 司机 车辆 错误信息提醒   1400-1499
      */
@@ -29,6 +30,11 @@ public enum CommonStatusEnum {
     DRIVER_CAR_BIND_EXIST(1403,"司机和车辆已被绑定，请勿重复绑定"),
     DRIVER_CAR_BIND_NOT_EXIST(1404,"司机与车辆关系不存在"),
     DRIVER_NOT_EXIST(1405,"司机不存在"),
+    /**
+     * 订单   1500-1599
+     */
+    ORDER_EXIST(1500,"还有正在运行的订单，请订单结束后，再下单"),
+    LIMIT_ORDERS(1501,"服务异常不允许下单"),
     SUCCESS(1,"success"),
     FAIL(0,"fail");
     @Getter

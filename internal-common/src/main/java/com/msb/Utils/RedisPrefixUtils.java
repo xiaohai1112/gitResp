@@ -5,6 +5,8 @@ public class RedisPrefixUtils {
     public static String verificationCodePrefix="verification-code";
     //token前缀
     public static String tokenPrefix="token-";
+    //黑名单前缀
+    public static String deviceCodePrefix="deviceCode-";
 
     /**
      * 根据手机号生成key
