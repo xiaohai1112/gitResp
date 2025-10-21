@@ -40,7 +40,7 @@ public class PriceRuleController {
     public ResponseResult<Boolean> isLatestVersion(@RequestParam String fareType,@RequestParam Integer fareVersion){
         return priceRuleService.isLatestVersion(fareType,fareVersion);
     }
-    @GetMapping("/is-exits")
+    @PostMapping("/is-exits")
     public ResponseResult<Boolean> isExits(@RequestBody PriceRule priceRule){
         return priceRuleService.getBy(priceRule);
     }

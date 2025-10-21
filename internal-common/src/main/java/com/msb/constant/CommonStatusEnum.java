@@ -35,6 +35,7 @@ public enum CommonStatusEnum {
      */
     ORDER_EXIST(1500,"还有正在运行的订单，请订单结束后，再下单"),
     LIMIT_ORDERS(1501,"服务异常不允许下单"),
+    CITY_NOT_SERVICE(1502,"该城市不支持服务"),
     SUCCESS(1,"success"),
     FAIL(0,"fail");
     @Getter
