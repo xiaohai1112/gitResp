@@ -115,4 +115,16 @@ public class PriceRuleService {
             }
         }
     }
+    public ResponseResult getBy(PriceRule priceRule){
+        QueryWrapper<PriceRule> priceRuleQueryWrapper = new QueryWrapper<>();
+        priceRuleQueryWrapper.eq("city_code",priceRule.getCityCode());
+        priceRuleQueryWrapper.eq("vehicle_type",priceRule.getVehicleType());
+        priceRuleQueryWrapper.orderByDesc("fare_version");
+        List<PriceRule> priceRules = priceRuleMapper.selectList(priceRuleQueryWrapper);
+        if (priceRules.size()>0){
+            return ResponseResult.success(true);
+        }else {
+            return ResponseResult.success(false);
+        }
+    }
 }
