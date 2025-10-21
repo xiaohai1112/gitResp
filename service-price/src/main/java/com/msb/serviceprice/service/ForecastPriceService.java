@@ -44,7 +44,7 @@ public class ForecastPriceService {
         Integer duration = result.getData().getDuration();
         log.info("距离："+distance+",时长："+duration);
 
-        log.info("读取计价规则");
+        log.info("读取最新的计价规则");
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("city_code",cityCode);
         queryWrapper.eq("vehicle_type",vehicleType);
@@ -61,6 +61,8 @@ public class ForecastPriceService {
         forecastPriceResponese.setPrice(price);
         forecastPriceResponese.setCityCode(cityCode);
         forecastPriceResponese.setVehicleType(vehicleType);
+        forecastPriceResponese.setFareType(priceRule.getFareType());
+        forecastPriceResponese.setFareVersion(priceRule.getFareVersion());
         return ResponseResult.success(forecastPriceResponese);
     }
 
@@ -81,7 +83,7 @@ public class ForecastPriceService {
         //总里程 m
         //总里程 km                                                      /1000              保留2位小数         四舍五入
 //        BigDecimal distanceMileDecimal = distanceDecimal.divide(new BigDecimal(1000), 2, BigDecimal.ROUND_HALF_UP);
-        double distanceMileDecimal=BigDecimalUtils.divide(distance,1000);
+        double distanceMileDecimal=BigDecimalUtils.divide(distance,1000,2);
 
         //起步里程
         Integer startMile = priceRule.getStartMile();
@@ -96,7 +98,7 @@ public class ForecastPriceService {
         price=BigDecimalUtils.add(price,multiply);
         //总时长 秒
         //总时长 分
-        double durationMinDecimal = BigDecimalUtils.divide(duration,60);
+        double durationMinDecimal = BigDecimalUtils.divide(duration,60,2);
         //计时单价
         Double unitPricePerMinute = priceRule.getUnitPricePerMinute();
         //时长价

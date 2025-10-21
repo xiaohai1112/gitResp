@@ -1,5 +1,7 @@
 package com.msb.Utils;
 
+import com.msb.dao.ResponseResult;
+
 import java.math.BigDecimal;
 
 public class BigDecimalUtils {
@@ -44,9 +46,12 @@ public class BigDecimalUtils {
      * @param v2
      * @return
      */
-    public static double divide(double v1,double v2){
+    public static double divide(double v1,double v2,int scale){
+        if (v2 == 0) {
+            throw new ArithmeticException("除数不能为0");
+        }
         BigDecimal v1Decimal=BigDecimal.valueOf(v1);
         BigDecimal v2Decimal=BigDecimal.valueOf(v2);
-        return v1Decimal.divide(v2Decimal).doubleValue();
+        return v1Decimal.divide(v2Decimal,scale,BigDecimal.ROUND_HALF_UP).doubleValue();
     }
 }

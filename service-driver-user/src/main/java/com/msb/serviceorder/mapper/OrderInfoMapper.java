@@ -1,7 +1,8 @@
 package com.msb.serviceorder.mapper;
 
-import com.msb.serviceorder.entity.OrderInfo;
+
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.msb.dao.OrderInfo;
 
 /**
  * <p>
