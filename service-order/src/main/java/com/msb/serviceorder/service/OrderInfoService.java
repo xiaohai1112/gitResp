@@ -9,15 +9,19 @@ import com.msb.dao.OrderInfo;
 import com.msb.dao.PriceRule;
 import com.msb.dao.ResponseResult;
 import com.msb.request.OrderRequest;
+import com.msb.responese.TerminalResponse;
 import com.msb.serviceorder.mapper.OrderInfoMapper;
 import com.msb.serviceorder.romate.ServiceDriverUserClient;
+import com.msb.serviceorder.romate.ServiceMapClient;
 import com.msb.serviceorder.romate.ServicePriceClient;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -29,6 +33,7 @@ import java.util.concurrent.TimeUnit;
  * @since 2025-10-20
  */
 @Service
+@Slf4j
 public class OrderInfoService {
     @Autowired
     ServiceDriverUserClient serviceDriverUserClient;
@@ -38,7 +43,18 @@ public class OrderInfoService {
     OrderInfoMapper orderInfoMapper;
     @Autowired
     StringRedisTemplate stringRedisTemplate;
+    @Autowired
+    ServiceMapClient serviceMapClient;
     public ResponseResult add(OrderRequest orderRequest){
+        //判断计价规则的版本是否是最新的版本
+        ResponseResult<Boolean> latestVersion = servicePriceClient.isLatestVersion(orderRequest.getFareType(), orderRequest.getFareVersion());
+        if (!latestVersion.getData()){
+            return ResponseResult.fail(CommonStatusEnum.PICE_RULE_NOT_NEW.getCode(),CommonStatusEnum.PICE_RULE_NOT_NEW.getValue());
+        }
+        //判断该城市是否支持乘车
+        if (!isPriceRuleExists(orderRequest)){
+            return ResponseResult.fail(CommonStatusEnum.CITY_NOT_SERVICE.getCode(),CommonStatusEnum.CITY_NOT_SERVICE.getValue());
+        }
         //判断该地是否有可用司机
         String cityCode=orderRequest.getAddress();
         ResponseResult<Boolean> booleanResponseResult = serviceDriverUserClient.find(cityCode);
@@ -46,32 +62,41 @@ public class OrderInfoService {
         if (!booleanResponseResult.getData()){
             return ResponseResult.fail(CommonStatusEnum.DRIVER_NOT_CITY.getCode(),CommonStatusEnum.DRIVER_NOT_CITY.getValue());
         }
-
-        //判断计价规则的版本是否是最新的版本
-//        ResponseResult<Boolean> latestVersion = servicePriceClient.isLatestVersion(orderRequest.getFareType(), orderRequest.getFareVersion());
-//        if (!latestVersion.getData()){
-//            return ResponseResult.fail(CommonStatusEnum.PICE_RULE_NOT_NEW.getCode(),CommonStatusEnum.PICE_RULE_NOT_NEW.getValue());
-//        }
-        //判断该城市是否支持乘车
-        if (!isPriceRuleExists(orderRequest)){
-            return ResponseResult.fail(CommonStatusEnum.CITY_NOT_SERVICE.getCode(),CommonStatusEnum.CITY_NOT_SERVICE.getValue());
-        }
         //判断下单手机号是否是黑名单中的
         if (isBlackDevice(orderRequest))
             return ResponseResult.fail(CommonStatusEnum.LIMIT_ORDERS.getCode(), CommonStatusEnum.LIMIT_ORDERS.getValue());
+
         //判断正在进行的订单是否还能下单
         int orderNum = getOrderNum(orderRequest.getPassengerId());
         if (orderNum>0){
             return ResponseResult.fail(CommonStatusEnum.ORDER_EXIST.getCode(),CommonStatusEnum.ORDER_EXIST.getValue());
         }
+        //搜索车辆
+        String depLatitude = orderRequest.getDepLatitude();
+        String depLongitude = orderRequest.getDepLongitude();
+        String center = depLatitude+","+depLongitude;
+        int radius = 2000;
+        ResponseResult<List<TerminalResponse>> listResponseResult = serviceMapClient.terminalAroundsearch(center, radius);
+        List<TerminalResponse> data = listResponseResult.getData();
+        if (data.size()==0){
+            radius = 4000;
+            listResponseResult=serviceMapClient.terminalAroundsearch(center,radius);
+            if (data.size()==0){
+                radius = 5000;
+                listResponseResult=serviceMapClient.terminalAroundsearch(center,radius);
+                if (data.size()==0){
+                    System.out.println(("未找到车辆"));
+                }
+            }
+        }
         //创建订单
-//        OrderInfo orderInfo = new OrderInfo();
-//        BeanUtils.copyProperties(orderRequest,orderInfo);
-//        orderInfo.setOrderStatus(OrderConstant.ORDER_START);
-//        LocalDateTime now=LocalDateTime.now();
-//        orderInfo.setGmtCreate(now);
-//        orderInfo.setGmtModified(now);
-//        orderInfoMapper.insert(orderInfo);
+        OrderInfo orderInfo = new OrderInfo();
+        BeanUtils.copyProperties(orderRequest,orderInfo);
+        orderInfo.setOrderStatus(OrderConstant.ORDER_START);
+        LocalDateTime now=LocalDateTime.now();
+        orderInfo.setGmtCreate(now);
+        orderInfo.setGmtModified(now);
+        orderInfoMapper.insert(orderInfo);
         return ResponseResult.success();
     }
     private boolean isPriceRuleExists(OrderRequest orderRequest){
