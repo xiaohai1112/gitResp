@@ -45,8 +45,10 @@ public class TerminalClient {
         JSONObject jsonObject = JSONObject.fromObject(body);
         JSONObject data = jsonObject.getJSONObject("data");
         String tid = data.getString("tid");
+        Long carId = data.getLong("car_id");
         TerminalResponse terminalResponse = new TerminalResponse();
         terminalResponse.setTid(tid);
+        terminalResponse.setCarId(carId);
         return ResponseResult.success(terminalResponse);
     }
     public ResponseResult<List<TerminalResponse>> aroundsearch(String center,Integer radius){

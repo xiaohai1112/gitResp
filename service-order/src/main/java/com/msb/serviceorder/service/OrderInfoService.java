@@ -2,6 +2,7 @@ package com.msb.serviceorder.service;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.msb.Utils.RedisPrefixUtils;
 import com.msb.constant.CommonStatusEnum;
 import com.msb.constant.OrderConstant;
@@ -14,6 +15,8 @@ import com.msb.serviceorder.mapper.OrderInfoMapper;
 import com.msb.serviceorder.romate.ServiceDriverUserClient;
 import com.msb.serviceorder.romate.ServiceMapClient;
 import com.msb.serviceorder.romate.ServicePriceClient;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -96,7 +99,9 @@ public class OrderInfoService {
         for (int r:radiusList) {
             radius=r;
             listResponseResult = serviceMapClient.terminalAroundsearch(center, radius);
-            System.out.println(("在" + radius + "米范围内寻找车辆"));
+
+            System.out.println(("在" + radius + "米范围内寻找车辆"+ JSONArray.fromObject(listResponseResult.getData()).toString()));
+
             //获取终端
             //解析终端
             //查询车辆信息
