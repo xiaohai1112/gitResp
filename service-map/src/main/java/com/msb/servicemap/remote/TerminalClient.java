@@ -76,7 +76,8 @@ public class TerminalClient {
             TerminalResponse terminalResponse = new TerminalResponse();
             JSONObject jsonObject = results.getJSONObject(i);
             String tid = jsonObject.getString("tid");
-            Long carId = jsonObject.getLong("desc");
+            String desc = jsonObject.getString("desc");//强转会丢失经度 string--> Long
+            Long carId = Long.parseLong(desc);
             terminalResponse.setTid(tid);
             terminalResponse.setCarId(carId);
             list.add(terminalResponse);
