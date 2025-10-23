@@ -42,4 +42,8 @@ public class UserController {
         }
         return ResponseResult.success(response);
     }
+    @GetMapping("/get-available-driver/{carId}")
+    public ResponseResult getAvailableDriver(@PathVariable Long carId){
+       return driverUserService.getAvailableDriver(carId);
+    }
 }

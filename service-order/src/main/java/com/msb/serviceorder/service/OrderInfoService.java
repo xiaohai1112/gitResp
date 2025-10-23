@@ -101,9 +101,17 @@ public class OrderInfoService {
             listResponseResult = serviceMapClient.terminalAroundsearch(center, radius);
 
             System.out.println(("在" + radius + "米范围内寻找车辆"+ JSONArray.fromObject(listResponseResult.getData()).toString()));
-
+            //[{"carId":1980825251740209154,"tid":"1557275988"}]
             //获取终端
+            JSONArray data = JSONArray.fromObject(listResponseResult.getData());
+            for (int i = 0; i < data.size(); i++) {
+                JSONObject jsonObject = data.getJSONObject(i);
+                String carIdString = jsonObject.getString("carId");
+                System.out.println(carIdString);
+                long carId = Long.parseLong(carIdString);
+            }
             //解析终端
+
             //查询车辆信息
             //找到符合车辆进行派单
             //派单成功，退出循环
