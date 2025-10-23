@@ -10,6 +10,7 @@ import com.msb.dao.OrderInfo;
 import com.msb.dao.PriceRule;
 import com.msb.dao.ResponseResult;
 import com.msb.request.OrderRequest;
+import com.msb.request.PriceRuleNewRequest;
 import com.msb.responese.TerminalResponse;
 import com.msb.serviceorder.mapper.OrderInfoMapper;
 import com.msb.serviceorder.romate.ServiceDriverUserClient;
@@ -48,8 +49,11 @@ public class OrderInfoService {
     @Autowired
     ServiceMapClient serviceMapClient;
     public ResponseResult add(OrderRequest orderRequest){
+        PriceRuleNewRequest priceRuleNewRequest = new PriceRuleNewRequest();
+        priceRuleNewRequest.setFareType(orderRequest.getFareType());
+        priceRuleNewRequest.setFareVersion(orderRequest.getFareVersion());
         //判断计价规则的版本是否是最新的版本
-        ResponseResult<Boolean> latestVersion = servicePriceClient.isLatestVersion(orderRequest.getFareType(), orderRequest.getFareVersion());
+        ResponseResult<Boolean> latestVersion = servicePriceClient.isLatestVersion(priceRuleNewRequest);
         if (!latestVersion.getData()){
             return ResponseResult.fail(CommonStatusEnum.PICE_RULE_NOT_NEW.getCode(),CommonStatusEnum.PICE_RULE_NOT_NEW.getValue());
         }

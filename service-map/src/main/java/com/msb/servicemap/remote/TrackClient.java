@@ -3,6 +3,7 @@ package com.msb.servicemap.remote;
 import com.msb.constant.UrlDirectionConstant;
 import com.msb.dao.ResponseResult;
 import com.msb.responese.TrackResponse;
+import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
+@Slf4j
 public class TrackClient {
     @Value("${amap.key}")
     private String key;
@@ -32,8 +34,10 @@ public class TrackClient {
          *这是get请求  .getForEntity
          * post请求应用  .postForEntity
          */
+        log.info("创建轨迹请求"+stringBuilder.toString());
         ResponseEntity<String> forEntity = restTemplate.postForEntity(stringBuilder.toString(), null, String.class);
         String body = forEntity.getBody();
+        log.info("创建轨迹响应"+body);
         JSONObject jsonObject = JSONObject.fromObject(body);
         int errcode = jsonObject.getInt("errcode");
         if (errcode!=10000){

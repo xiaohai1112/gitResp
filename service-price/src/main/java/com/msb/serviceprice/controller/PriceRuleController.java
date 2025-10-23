@@ -3,6 +3,7 @@ package com.msb.serviceprice.controller;
 
 import com.msb.dao.PriceRule;
 import com.msb.dao.ResponseResult;
+import com.msb.request.PriceRuleNewRequest;
 import com.msb.serviceprice.service.PriceRuleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +37,15 @@ public class PriceRuleController {
     public ResponseResult<PriceRule> checkLatestVersion(@RequestParam String fareType){
         return priceRuleService.checkLatestVersion(fareType);
     }
-    @GetMapping("/is-latest-version")
-    public ResponseResult<Boolean> isLatestVersion(@RequestParam String fareType,@RequestParam Integer fareVersion){
-        return priceRuleService.isLatestVersion(fareType,fareVersion);
+
+    /**
+     * 判断规则是否是最新
+     * @param priceRuleNewRequest
+     * @return
+     */
+    @PostMapping("/is-latest-version")
+    public ResponseResult<Boolean> isLatestVersion(@RequestBody PriceRuleNewRequest priceRuleNewRequest){
+        return priceRuleService.isLatestVersion(priceRuleNewRequest.getFareType(), priceRuleNewRequest.getFareVersion());
     }
     @PostMapping("/is-exits")
     public ResponseResult<Boolean> isExits(@RequestBody PriceRule priceRule){

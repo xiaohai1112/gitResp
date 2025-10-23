@@ -4,6 +4,7 @@ import com.msb.constant.UrlDirectionConstant;
 import com.msb.dao.ResponseResult;
 import com.msb.responese.ServiceResponse;
 import com.msb.responese.TerminalResponse;
+import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 public class TerminalClient {
     @Value("${amap.key}")
     private String key;
@@ -38,17 +40,16 @@ public class TerminalClient {
          *这是get请求  .getForEntity
          * post请求应用  .postForEntity
          */
-        System.out.println("创建端口请求："+stringBuilder.toString());
+        log.info("创建端口请求："+stringBuilder.toString());
         ResponseEntity<String> forEntity = restTemplate.postForEntity(stringBuilder.toString(),null, String.class);
         String body = forEntity.getBody();
-        System.out.println("创建端口响应："+body);
+        log.info("创建端口响应："+body);
         JSONObject jsonObject = JSONObject.fromObject(body);
         JSONObject data = jsonObject.getJSONObject("data");
         String tid = data.getString("tid");
-        Long carId = data.getLong("car_id");
         TerminalResponse terminalResponse = new TerminalResponse();
         terminalResponse.setTid(tid);
-        terminalResponse.setCarId(carId);
+
         return ResponseResult.success(terminalResponse);
     }
     public ResponseResult<List<TerminalResponse>> aroundsearch(String center,Integer radius){

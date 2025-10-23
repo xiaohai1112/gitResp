@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
@@ -19,8 +20,7 @@ import org.springframework.stereotype.Controller;
  * @author child
  * @since 2025-10-20
  */
-@Controller
-@RequestMapping("/driver-user-work-status")
+@RestController
 public class DriverUserWorkStatusController {
     @Autowired
     private DriverUserWorkStatusService driverUserWorkStatusService;
