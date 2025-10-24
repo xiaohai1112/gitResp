@@ -106,13 +106,12 @@ public class OrderInfoService {
             System.out.println(("在" + radius + "米范围内寻找车辆"+ JSONArray.fromObject(listResponseResult.getData()).toString()));
             //[{"carId":1980825251740209154,"tid":"1557275988"}]
             //获取终端
-            JSONArray data = JSONArray.fromObject(listResponseResult.getData());
+            List<TerminalResponse> data = listResponseResult.getData();
             for (int i = 0; i < data.size(); i++) {
-                JSONObject jsonObject = data.getJSONObject(i);
-                String carIdString = jsonObject.getString("carId");
-                long carId = Long.parseLong(carIdString);
-                long latitude = jsonObject.getLong("latitude");
-                long longitude = jsonObject.getLong("longitude");
+                TerminalResponse terminalResponse = data.get(i);
+                Long carId = terminalResponse.getCarId();
+                Long latitude = terminalResponse.getLatitude();
+                Long longitude = terminalResponse.getLongitude();
                 ResponseResult<OrderResponse> availableDriver = serviceDriverUserClient.getAvailableDriver(carId);
                 if (availableDriver.getCode()==CommonStatusEnum.AVAILABLE_DRIVER_NOT_EXIST.getCode()){
                     System.out.println(("没有司机" + carId));
