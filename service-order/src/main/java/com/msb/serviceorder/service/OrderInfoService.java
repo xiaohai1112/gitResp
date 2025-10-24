@@ -88,7 +88,7 @@ public class OrderInfoService {
         return ResponseResult.success();
     }
 
-    public synchronized void aroundsearch(OrderInfo orderInfo) {
+    public void aroundsearch(OrderInfo orderInfo) {
         String depLatitude = orderInfo.getDepLatitude();
         String depLongitude = orderInfo.getDepLongitude();
         String center = depLatitude+","+depLongitude;
@@ -120,26 +120,28 @@ public class OrderInfoService {
                     System.out.println(("找到车了" + carId));
                     OrderResponse orderResponse = availableDriver.getData();
                     Long driverId = orderResponse.getDriverId();
-                    //判断正在进行的订单是否还能下单
-                    if (getDriverOrderNum(driverId)>0){
-                        continue ;
+                    synchronized ((driverId+"").intern()){
+                        //判断正在进行的订单是否还能下单
+                        if (getDriverOrderNum(driverId)>0){
+                            continue ;
+                        }
+                        //订单匹配司机
+
+                        //司机
+                        orderInfo.setDriverId(driverId);
+                        orderInfo.setDriverPhone(orderResponse.getDriverPhone());
+                        orderInfo.setCarId(carId);
+                        //地图
+                        orderInfo.setReceiveOrderCarLongitude(longitude+"");
+                        orderInfo.setReceiveOrderCarLatitude(latitude+"");
+                        orderInfo.setReceiveOrderTime(LocalDateTime.now());
+
+                        orderInfo.setLicenseId(orderResponse.getLicenseId());
+                        orderInfo.setVehicleNo(orderResponse.getVehicleNo());
+                        orderInfo.setOrderStatus(OrderConstant.DRIVER_RECEIVE_ORDER);
+                        orderInfoMapper.updateById(orderInfo);
+                        break raduis;
                     }
-                    //订单匹配司机
-
-                    //司机
-                    orderInfo.setDriverId(driverId);
-                    orderInfo.setDriverPhone(orderResponse.getDriverPhone());
-                    orderInfo.setCarId(carId);
-                    //地图
-                    orderInfo.setReceiveOrderCarLongitude(longitude+"");
-                    orderInfo.setReceiveOrderCarLatitude(latitude+"");
-                    orderInfo.setReceiveOrderTime(LocalDateTime.now());
-
-                    orderInfo.setLicenseId(orderResponse.getLicenseId());
-                    orderInfo.setVehicleNo(orderResponse.getVehicleNo());
-                    orderInfo.setOrderStatus(OrderConstant.DRIVER_RECEIVE_ORDER);
-                    orderInfoMapper.updateById(orderInfo);
-                    break raduis;
                 }
 
             }
