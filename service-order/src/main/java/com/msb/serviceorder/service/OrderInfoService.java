@@ -88,7 +88,7 @@ public class OrderInfoService {
         return ResponseResult.success();
     }
 
-    public void aroundsearch(OrderInfo orderInfo) {
+    public synchronized void aroundsearch(OrderInfo orderInfo) {
         String depLatitude = orderInfo.getDepLatitude();
         String depLongitude = orderInfo.getDepLongitude();
         String center = depLatitude+","+depLongitude;
