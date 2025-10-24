@@ -3,11 +3,9 @@ package com.msb.servicedriveruser.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.msb.constant.CommonStatusEnum;
 import com.msb.constant.DriverCarConstant;
-import com.msb.dao.DriverCarBindingRelationship;
-import com.msb.dao.DriverUser;
-import com.msb.dao.DriverUserWorkStatus;
-import com.msb.dao.ResponseResult;
+import com.msb.dao.*;
 import com.msb.responese.OrderResponse;
+import com.msb.servicedriveruser.mapper.CarMapper;
 import com.msb.servicedriveruser.mapper.DriverCarBindingRelationshipMapper;
 import com.msb.servicedriveruser.mapper.DriverUserMapper;
 import com.msb.servicedriveruser.mapper.DriverUserWorkStatusMapper;
@@ -27,6 +25,9 @@ public class DriverUserService {
     private DriverUserMapper driverUserMapper;
     @Autowired
     private DriverUserWorkStatusMapper driverUserWorkStatusMapper;
+    @Autowired
+    private CarMapper carMapper;
+
     public ResponseResult test(){
         return ResponseResult.success(driverUserMapper.selectById(1));
     }
@@ -65,13 +66,13 @@ public class DriverUserService {
     DriverCarBindingRelationshipMapper driverCarBindingRelationshipMapper;
     public ResponseResult<OrderResponse> getAvailableDriver(Long carId){
         QueryWrapper<DriverCarBindingRelationship> queryWrapper = new QueryWrapper<>();
+        //绑定状态
         queryWrapper.eq("car_id",carId);
         queryWrapper.eq("bind_state",DriverCarConstant.DRIVER_CAR_BIND);
         DriverCarBindingRelationship driverCarBindingRelationship = driverCarBindingRelationshipMapper.selectOne(queryWrapper);
-        System.out.println(driverCarBindingRelationship);
         Long driverId = driverCarBindingRelationship.getDriverId();
-        System.out.println(driverId);
         QueryWrapper<DriverUserWorkStatus> driverUserWorkStatusQueryWrapper = new QueryWrapper<>();
+        //查看司机工作状态
         driverUserWorkStatusQueryWrapper.eq("driver_id",driverId);
         driverUserWorkStatusQueryWrapper.eq("work_status",DriverCarConstant.DRIVER_WORK_STATUS_START);
         DriverUserWorkStatus driverUserWorkStatus = driverUserWorkStatusMapper.selectOne(driverUserWorkStatusQueryWrapper);
@@ -79,12 +80,22 @@ public class DriverUserService {
             return ResponseResult.fail(CommonStatusEnum.AVAILABLE_DRIVER_NOT_EXIST.getCode(),CommonStatusEnum.AVAILABLE_DRIVER_NOT_EXIST.getValue());
         }else {
             QueryWrapper<DriverUser> driverUserQueryWrapper = new QueryWrapper<>();
+            //查司机信息
             driverUserQueryWrapper.eq("id",driverId);
             DriverUser driverUser = driverUserMapper.selectOne(driverUserQueryWrapper);
+
+            QueryWrapper<Car> carQueryWrapper = new QueryWrapper<>();
+            carQueryWrapper.eq("id",carId);
+            Car car = carMapper.selectOne(carQueryWrapper);
+
             OrderResponse orderResponse = new OrderResponse();
             orderResponse.setCarId(carId);
             orderResponse.setDriverId(driverId);
             orderResponse.setDriverPhone(driverUser.getDriverPhone());
+
+            orderResponse.setLicenseId(driverUser.getLicenseId());
+            orderResponse.setVehicleNo(car.getVehicleNo());
+
             return ResponseResult.success(orderResponse);
         }
     }

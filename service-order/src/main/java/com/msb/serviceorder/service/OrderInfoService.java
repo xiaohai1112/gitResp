@@ -2,7 +2,6 @@ package com.msb.serviceorder.service;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.msb.Utils.RedisPrefixUtils;
 import com.msb.constant.CommonStatusEnum;
 import com.msb.constant.OrderConstant;
@@ -11,6 +10,7 @@ import com.msb.dao.PriceRule;
 import com.msb.dao.ResponseResult;
 import com.msb.request.OrderRequest;
 import com.msb.request.PriceRuleNewRequest;
+import com.msb.responese.OrderResponse;
 import com.msb.responese.TerminalResponse;
 import com.msb.serviceorder.mapper.OrderInfoMapper;
 import com.msb.serviceorder.romate.ServiceDriverUserClient;
@@ -29,9 +29,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * <p>
- *  服务类
- * </p>
  *
  * @author child
  * @since 2025-10-20
@@ -73,12 +70,11 @@ public class OrderInfoService {
             return ResponseResult.fail(CommonStatusEnum.LIMIT_ORDERS.getCode(), CommonStatusEnum.LIMIT_ORDERS.getValue());
 
         //判断正在进行的订单是否还能下单
-        int orderNum = getOrderNum(orderRequest.getPassengerId());
+        int orderNum = getPassengerOrderNum(orderRequest.getPassengerId());
         if (orderNum>0){
             return ResponseResult.fail(CommonStatusEnum.ORDER_EXIST.getCode(),CommonStatusEnum.ORDER_EXIST.getValue());
         }
-        //搜索车辆
-        aroundsearch(orderRequest);
+
         //创建订单
         OrderInfo orderInfo = new OrderInfo();
         BeanUtils.copyProperties(orderRequest,orderInfo);
@@ -87,12 +83,14 @@ public class OrderInfoService {
         orderInfo.setGmtCreate(now);
         orderInfo.setGmtModified(now);
         orderInfoMapper.insert(orderInfo);
+        //搜索车辆
+        aroundsearch(orderInfo);
         return ResponseResult.success();
     }
 
-    private void aroundsearch(OrderRequest orderRequest) {
-        String depLatitude = orderRequest.getDepLatitude();
-        String depLongitude = orderRequest.getDepLongitude();
+    public void aroundsearch(OrderInfo orderInfo) {
+        String depLatitude = orderInfo.getDepLatitude();
+        String depLongitude = orderInfo.getDepLongitude();
         String center = depLatitude+","+depLongitude;
         int radius = 2000;
         List<Integer> radiusList=new ArrayList<>();
@@ -100,6 +98,7 @@ public class OrderInfoService {
         radiusList.add(4000);
         radiusList.add(5000);
         ResponseResult<List<TerminalResponse>> listResponseResult =null;
+        raduis:
         for (int r:radiusList) {
             radius=r;
             listResponseResult = serviceMapClient.terminalAroundsearch(center, radius);
@@ -111,8 +110,39 @@ public class OrderInfoService {
             for (int i = 0; i < data.size(); i++) {
                 JSONObject jsonObject = data.getJSONObject(i);
                 String carIdString = jsonObject.getString("carId");
-                System.out.println(carIdString);
                 long carId = Long.parseLong(carIdString);
+                long latitude = jsonObject.getLong("latitude");
+                long longitude = jsonObject.getLong("longitude");
+                ResponseResult<OrderResponse> availableDriver = serviceDriverUserClient.getAvailableDriver(carId);
+                if (availableDriver.getCode()==CommonStatusEnum.AVAILABLE_DRIVER_NOT_EXIST.getCode()){
+                    System.out.println(("没有司机" + carId));
+                    continue raduis;
+                }else {
+                    System.out.println(("找到车了" + carId));
+                    OrderResponse orderResponse = availableDriver.getData();
+                    Long driverId = orderResponse.getDriverId();
+                    //判断正在进行的订单是否还能下单
+                    if (getDriverOrderNum(driverId)>0){
+                        continue ;
+                    }
+                    //订单匹配司机
+
+                    //司机
+                    orderInfo.setDriverId(driverId);
+                    orderInfo.setDriverPhone(orderResponse.getDriverPhone());
+                    orderInfo.setCarId(carId);
+                    //地图
+                    orderInfo.setReceiveOrderCarLongitude(longitude+"");
+                    orderInfo.setReceiveOrderCarLatitude(latitude+"");
+                    orderInfo.setReceiveOrderTime(LocalDateTime.now());
+
+                    orderInfo.setLicenseId(orderResponse.getLicenseId());
+                    orderInfo.setVehicleNo(orderResponse.getVehicleNo());
+                    orderInfo.setOrderStatus(OrderConstant.DRIVER_RECEIVE_ORDER);
+                    orderInfoMapper.updateById(orderInfo);
+                    break raduis;
+                }
+
             }
             //解析终端
 
@@ -154,7 +184,12 @@ public class OrderInfoService {
         return false;
     }
 
-    public int getOrderNum(Long passengerId){
+    /**
+     * 查看乘客有没有正在进行的订单
+     * @param passengerId
+     * @return
+     */
+    public int getPassengerOrderNum(Long passengerId){
         QueryWrapper<OrderInfo> orderInfoQueryWrapper = new QueryWrapper<>();
         orderInfoQueryWrapper.eq("passenger_id",passengerId);
         orderInfoQueryWrapper.and(wrapper->wrapper.eq("order_status",OrderConstant.ORDER_START)
@@ -165,6 +200,22 @@ public class OrderInfoService {
                 .or().eq("order_status",OrderConstant.PASSENGER_GETOFF)
                 .or().eq("order_status",OrderConstant.TO_START_PAY));
         Integer i = orderInfoMapper.selectCount(orderInfoQueryWrapper);
+        return i;
+    }
+    /**
+     * 查看司机有没有正在进行的订单
+     * @param driverId
+     * @return
+     */
+    public int getDriverOrderNum(Long driverId){
+        QueryWrapper<OrderInfo> orderInfoQueryWrapper = new QueryWrapper<>();
+        orderInfoQueryWrapper.eq("driver_id",driverId);
+        orderInfoQueryWrapper.and(wrapper->wrapper.eq("order_status",OrderConstant.DRIVER_RECEIVE_ORDER)
+                .or().eq("order_status",OrderConstant.DRIVER_TOO_PICK_UP_PASSENGER)
+                .or().eq("order_status",OrderConstant.DRIVER_ARRIVED_DEPARTURE)
+                .or().eq("order_status",OrderConstant.PICK_UP_PASSENGER));
+        Integer i = orderInfoMapper.selectCount(orderInfoQueryWrapper);
+        System.out.println("司机id："+driverId+"正在进行的订单:"+i);
         return i;
     }
 }

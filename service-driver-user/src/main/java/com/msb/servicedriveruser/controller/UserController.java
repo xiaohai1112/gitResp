@@ -4,6 +4,7 @@ import com.msb.constant.DriverCarConstant;
 import com.msb.dao.DriverUser;
 import com.msb.dao.ResponseResult;
 import com.msb.responese.DriverUserExistsResponse;
+import com.msb.responese.OrderResponse;
 import com.msb.servicedriveruser.service.DriverUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -43,7 +44,7 @@ public class UserController {
         return ResponseResult.success(response);
     }
     @GetMapping("/get-available-driver/{carId}")
-    public ResponseResult getAvailableDriver(@PathVariable Long carId){
+    public ResponseResult<OrderResponse> getAvailableDriver(@PathVariable Long carId){
        return driverUserService.getAvailableDriver(carId);
     }
 }

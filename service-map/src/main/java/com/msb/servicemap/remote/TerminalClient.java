@@ -79,6 +79,13 @@ public class TerminalClient {
             String tid = jsonObject.getString("tid");
             String desc = jsonObject.getString("desc");//强转会丢失经度 string--> Long
             Long carId = Long.parseLong(desc);
+
+            JSONObject location = jsonObject.getJSONObject("location");
+            long latitude = location.getLong("latitude");
+            long longitude = location.getLong("longitude");
+            terminalResponse.setLatitude(latitude);
+            terminalResponse.setLongitude(longitude);
+
             terminalResponse.setTid(tid);
             terminalResponse.setCarId(carId);
             list.add(terminalResponse);
