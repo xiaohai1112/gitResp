@@ -18,6 +18,8 @@ import com.msb.serviceorder.romate.ServiceMapClient;
 import com.msb.serviceorder.romate.ServicePriceClient;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -44,6 +46,8 @@ public class OrderInfoService {
     StringRedisTemplate stringRedisTemplate;
     @Autowired
     ServiceMapClient serviceMapClient;
+    @Autowired
+    RedissonClient redissonClient;
 
     public ResponseResult add(OrderRequest orderRequest) {
         PriceRuleNewRequest priceRuleNewRequest = new PriceRuleNewRequest();
@@ -88,7 +92,7 @@ public class OrderInfoService {
         return ResponseResult.success();
     }
 
-    public synchronized void aroundsearch(OrderInfo orderInfo) {
+    public void aroundsearch(OrderInfo orderInfo) {
         String depLatitude = orderInfo.getDepLatitude();
         String depLongitude = orderInfo.getDepLongitude();
         String center = depLatitude + "," + depLongitude;
@@ -120,8 +124,12 @@ public class OrderInfoService {
                     System.out.println(("找到车了" + carId));
                     OrderResponse orderResponse = availableDriver.getData();
                     Long driverId = orderResponse.getDriverId();
+                    String lockKey = (driverId + "").intern();
+                    RLock lock = redissonClient.getLock(lockKey);
+                    lock.lock();
                     //判断正在进行的订单是否还能下单
                     if (getDriverOrderNum(driverId) > 0) {
+                        lock.unlock();
                         continue;
                     }
                     //订单匹配司机
@@ -139,6 +147,7 @@ public class OrderInfoService {
                     orderInfo.setVehicleNo(orderResponse.getVehicleNo());
                     orderInfo.setOrderStatus(OrderConstant.DRIVER_RECEIVE_ORDER);
                     orderInfoMapper.updateById(orderInfo);
+                    lock.unlock();
                     break raduis;
                 }
             }
