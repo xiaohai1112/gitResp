@@ -17,9 +17,9 @@ spring:
     port: 6379
     database: 0
 
-logging:
-  level:
-    com.baomidou: debug
+#logging:
+#  level:
+#    com.baomidou: debug
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

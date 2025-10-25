@@ -16,8 +16,4 @@ public class OrderController {
         System.out.println(orderRequest);
         return orderService.add(orderRequest);
     }
-    @GetMapping("/test-real-time-order/{orderId}")
-    public ResponseResult dispatchRealTimeOrder(@PathVariable("orderId") long orderId){
-        return orderService.dispatchRealTimeOrder(orderId);
-    }
 }
