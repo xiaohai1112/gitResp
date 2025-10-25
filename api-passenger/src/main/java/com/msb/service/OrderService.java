@@ -13,4 +13,7 @@ public class OrderService {
     public ResponseResult add(OrderRequest orderRequest){
         return serviceOrderClient.add(orderRequest);
     }
+    public ResponseResult dispatchRealTimeOrder(long orderId){
+        return serviceOrderClient.dispatchRealTimeOrder(orderId);
+    }
 }

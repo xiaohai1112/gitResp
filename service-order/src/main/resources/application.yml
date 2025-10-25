@@ -1,5 +1,3 @@
-server:
-  port: 8088
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -18,9 +16,20 @@ spring:
     host: 192.168.121.134
     port: 6379
     database: 0
+
 logging:
   level:
     com.baomidou: debug
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+---
+spring:
+  profiles: 8090
+server:
+  port: 8090
+---
+spring:
+  profiles: 8089
+server:
+  port: 8089
