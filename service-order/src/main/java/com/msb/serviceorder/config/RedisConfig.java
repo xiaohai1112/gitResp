@@ -1,6 +1,5 @@
 package com.msb.serviceorder.config;
 
-import com.msb.dao.ResponseResult;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
