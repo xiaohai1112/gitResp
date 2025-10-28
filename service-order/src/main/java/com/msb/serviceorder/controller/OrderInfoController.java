@@ -6,12 +6,9 @@ import com.msb.dao.ResponseResult;
 import com.msb.request.OrderRequest;
 import com.msb.serviceorder.service.OrderInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -35,8 +32,14 @@ public class OrderInfoController {
         orderRequest.setDeviceCode(deviceCode);
         return orderInfoService.add(orderRequest);
     }
+    //司机去接乘客
     @PostMapping("/changeStatus")
     public ResponseResult changeStatus(@RequestBody OrderRequest orderRequest){
         return orderInfoService.toPickUpPassenger(orderRequest);
+    }
+    //到达乘客上车点
+    @PostMapping("/arrivedDeparture")
+    public ResponseResult arrivedDeparture(@RequestParam Long orderId){
+        return orderInfoService.arrivedDeparture(orderId);
     }
 }

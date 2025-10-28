@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -293,6 +294,12 @@ public class OrderInfoService {
         System.out.println("司机id：" + driverId + "正在进行的订单:" + i);
         return i;
     }
+
+    /**
+     * 司机去接乘客
+     * @param orderRequest
+     * @return
+     */
     public ResponseResult toPickUpPassenger(OrderRequest orderRequest){
         Long orderId = orderRequest.getOrderId();
         String toPickUpPassengerLongitude = orderRequest.getToPickUpPassengerLongitude();
@@ -309,5 +316,20 @@ public class OrderInfoService {
         orderInfo.setOrderStatus(OrderConstant.DRIVER_TOO_PICK_UP_PASSENGER);
         orderInfoMapper.updateById(orderInfo);
         return ResponseResult.success();
+    }
+
+    /**
+     * 到达乘客上车点
+     * @param orderId
+     * @return
+     */
+    public ResponseResult arrivedDeparture(Long orderId){
+        QueryWrapper<OrderInfo> orderInfoQueryWrapper = new QueryWrapper<>();
+        orderInfoQueryWrapper.eq("id",orderId);
+        OrderInfo orderInfo = orderInfoMapper.selectOne(orderInfoQueryWrapper);
+        orderInfo.setOrderStatus(OrderConstant.DRIVER_ARRIVED_DEPARTURE);
+        orderInfo.setDriverArrivedDepartureTime(LocalDateTime.now());
+        orderInfoMapper.updateById(orderInfo);
+        return ResponseResult.success("");
     }
 }
