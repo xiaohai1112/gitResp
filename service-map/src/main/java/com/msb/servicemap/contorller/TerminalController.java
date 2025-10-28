@@ -17,6 +17,13 @@ import java.util.List;
 public class TerminalController {
     @Autowired
     private TerminalService terminalService;
+
+    /**
+     * 添加轨迹
+     * @param name
+     * @param desc
+     * @return
+     */
     @PostMapping("/add")
     public ResponseResult<TerminalResponse> add(String name,String desc){
         return terminalService.add(name ,desc);
@@ -25,6 +32,14 @@ public class TerminalController {
     public ResponseResult<List<TerminalResponse>> aroundsearch(String center, Integer radius){
         return terminalService.aroundsearch(center,radius);
     }
+
+    /**
+     * 查询轨迹
+     * @param tid
+     * @param starttime
+     * @param endtime
+     * @return
+     */
     @PostMapping("/trsearch")
     public ResponseResult<TracksResponese> trsearch(String tid, Long starttime, Long endtime){
         return terminalService.trsearch(tid,starttime,endtime);
