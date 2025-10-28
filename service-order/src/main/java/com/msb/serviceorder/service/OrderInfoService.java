@@ -27,6 +27,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -213,6 +214,11 @@ public class OrderInfoService {
         return result;
     }
 
+    /**
+     * 判断该城市是否支持乘车
+     * @param orderRequest
+     * @return
+     */
     private boolean isPriceRuleExists(OrderRequest orderRequest) {
         String fareType = orderRequest.getFareType();
         int indexOf = fareType.indexOf("$");
@@ -225,6 +231,11 @@ public class OrderInfoService {
         return exits.getData();
     }
 
+    /**
+     * 判断下单手机号是否是黑名单中的
+     * @param orderRequest
+     * @return
+     */
     private boolean isBlackDevice(OrderRequest orderRequest) {
         String deviceCode = orderRequest.getDeviceCode();
         //生成key
@@ -281,5 +292,22 @@ public class OrderInfoService {
         Integer i = orderInfoMapper.selectCount(orderInfoQueryWrapper);
         System.out.println("司机id：" + driverId + "正在进行的订单:" + i);
         return i;
+    }
+    public ResponseResult toPickUpPassenger(OrderRequest orderRequest){
+        Long orderId = orderRequest.getOrderId();
+        String toPickUpPassengerLongitude = orderRequest.getToPickUpPassengerLongitude();
+        String toPickUpPassengerLatitude = orderRequest.getToPickUpPassengerLatitude();
+        String toPickUpPassengerAddress = orderRequest.getToPickUpPassengerAddress();
+        LocalDateTime toPickUpPassengerTime = orderRequest.getToPickUpPassengerTime();
+        QueryWrapper<OrderInfo> orderInfoQueryWrapper = new QueryWrapper<>();
+        orderInfoQueryWrapper.eq("id",orderId);
+        OrderInfo orderInfo = orderInfoMapper.selectOne(orderInfoQueryWrapper);
+        orderInfo.setToPickUpPassengerLongitude(toPickUpPassengerLongitude);
+        orderInfo.setToPickUpPassengerLatitude(toPickUpPassengerLatitude);
+        orderInfo.setToPickUpPassengerAddress(toPickUpPassengerAddress);
+        orderInfo.setToPickUpPassengerTime(LocalDateTime.now());
+        orderInfo.setOrderStatus(OrderConstant.DRIVER_TOO_PICK_UP_PASSENGER);
+        orderInfoMapper.updateById(orderInfo);
+        return ResponseResult.success();
     }
 }

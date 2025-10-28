@@ -13,7 +13,7 @@ public class OrderRequest {
     //地区行政代码
     private String address;
     //订单编号
-    private String orderId;
+    private Long orderId;
     //预计用车时间
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime departTime;
@@ -38,4 +38,24 @@ public class OrderRequest {
     private Integer fareVersion;
     //唯一版本号
     private String deviceCode;
+    /**
+     * 司机去接乘客出发时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime toPickUpPassengerTime;
+
+    /**
+     * 去接乘客时，司机的经度
+     */
+    private String toPickUpPassengerLongitude;
+
+    /**
+     * 去接乘客时，司机的纬度
+     */
+    private String toPickUpPassengerLatitude;
+
+    /**
+     * 去接乘客时，司机的地点
+     */
+    private String toPickUpPassengerAddress;
 }

@@ -35,4 +35,8 @@ public class OrderInfoController {
         orderRequest.setDeviceCode(deviceCode);
         return orderInfoService.add(orderRequest);
     }
+    @PostMapping("/changeStatus")
+    public ResponseResult changeStatus(@RequestBody OrderRequest orderRequest){
+        return orderInfoService.toPickUpPassenger(orderRequest);
+    }
 }
