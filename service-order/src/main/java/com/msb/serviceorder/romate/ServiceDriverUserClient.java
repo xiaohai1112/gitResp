@@ -1,5 +1,6 @@
 package com.msb.serviceorder.romate;
 
+import com.msb.dao.Car;
 import com.msb.dao.ResponseResult;
 import com.msb.responese.OrderResponse;
 import org.apache.ibatis.annotations.Param;
@@ -12,4 +13,6 @@ public interface ServiceDriverUserClient {
     public ResponseResult<Boolean> find(@RequestParam String cityCode);
     @RequestMapping(method = RequestMethod.GET,value = "/get-available-driver/{carId}")
     public ResponseResult<OrderResponse> getAvailableDriver(@PathVariable Long carId);
+    @RequestMapping(method = RequestMethod.GET,value = "/car")
+    public ResponseResult<Car> getCarById(@RequestParam Long carId);
 }

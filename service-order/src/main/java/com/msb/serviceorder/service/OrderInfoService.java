@@ -6,6 +6,7 @@ import com.msb.Utils.RedisPrefixUtils;
 import com.msb.constant.CommonStatusEnum;
 import com.msb.constant.IdentyConstant;
 import com.msb.constant.OrderConstant;
+import com.msb.dao.Car;
 import com.msb.dao.OrderInfo;
 import com.msb.dao.PriceRule;
 import com.msb.dao.ResponseResult;
@@ -52,6 +53,7 @@ public class OrderInfoService {
     RedissonClient redissonClient;
     @Autowired
     ServiceSsePlusClient serviceSsePlusClient;
+
 
     public ResponseResult add(OrderRequest orderRequest) {
         PriceRuleNewRequest priceRuleNewRequest = new PriceRuleNewRequest();
@@ -163,6 +165,23 @@ public class OrderInfoService {
                     driverObject.put("dest_longitude",orderInfo.getDestLongitude());
                     driverObject.put("dest_latitude",orderInfo.getDestLatitude());
                     serviceSsePlusClient.push(driverId, IdentyConstant.IDENTY_B,driverObject.toString());
+
+                    //通知乘客
+                    JSONObject passengerObject = new JSONObject();
+                    passengerObject.put("driver_id",orderInfo.getDriverId());
+                    passengerObject.put("driver_phone",orderInfo.getDriverPhone());
+                    passengerObject.put("vehicle_no",orderInfo.getVehicleNo());
+                    //车辆信息
+                    ResponseResult<Car> carById = serviceDriverUserClient.getCarById(carId);
+                    Car car = carById.getData();
+
+                    passengerObject.put("vehicle_color",car.getVehicleColor());
+                    passengerObject.put("brand",car.getBrand());
+                    passengerObject.put("model",car.getModel());
+
+                    passengerObject.put("receive_order_car_longitude",orderInfo.getReceiveOrderCarLongitude());
+                    passengerObject.put("receive_order_car_latitude",orderInfo.getReceiveOrderCarLatitude());
+                    serviceSsePlusClient.push(orderInfo.getPassengerId(), IdentyConstant.IDENTY_A,passengerObject.toString());
                     lock.unlock();
                     //派单成功，退出循环
                     break raduis;
