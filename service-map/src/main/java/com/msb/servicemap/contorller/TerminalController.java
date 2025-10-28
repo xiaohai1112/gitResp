@@ -3,6 +3,7 @@ package com.msb.servicemap.contorller;
 
 import com.msb.dao.ResponseResult;
 import com.msb.responese.TerminalResponse;
+import com.msb.responese.TracksResponese;
 import com.msb.servicemap.service.TerminalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +26,7 @@ public class TerminalController {
         return terminalService.aroundsearch(center,radius);
     }
     @PostMapping("/trsearch")
-    public ResponseResult trsearch(String tid,Long starttime,Long endtime){
+    public ResponseResult<TracksResponese> trsearch(String tid, Long starttime, Long endtime){
         return terminalService.trsearch(tid,starttime,endtime);
     }
 }

@@ -4,6 +4,7 @@ import com.msb.constant.UrlDirectionConstant;
 import com.msb.dao.ResponseResult;
 import com.msb.responese.ServiceResponse;
 import com.msb.responese.TerminalResponse;
+import com.msb.responese.TracksResponese;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -92,7 +93,7 @@ public class TerminalClient {
         }
         return ResponseResult.success(list);
     }
-    public ResponseResult trsearch(String tid,Long starttime,Long endtime){
+    public ResponseResult<TracksResponese> trsearch(String tid,Long starttime,Long endtime){
         //拼接url
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(UrlDirectionConstant.TRSEARCH_URI);
@@ -113,8 +114,25 @@ public class TerminalClient {
         ResponseEntity<String> forEntity = restTemplate.postForEntity(stringBuilder.toString(),null, String.class);
         String body = forEntity.getBody();
         log.info("创建端口响应："+body);
-
-
-        return null;
+        JSONObject data = JSONObject.fromObject(body).getJSONObject("data");
+        int counts = data.getInt("counts");
+        if (counts==0){
+            return null;
+        }
+        JSONArray tracks = data.getJSONArray("tracks");
+        Long driveMile=0L;
+        Long driveTime=0L;
+        for (int i=0;i<tracks.size();i++){
+            JSONObject jsonObject = tracks.getJSONObject(i);
+            long distance = jsonObject.getLong("distance");
+            driveMile+=distance;
+            long time = jsonObject.getLong("time");
+            time=time/(1000*60);
+            driveTime+=time;
+        }
+        TracksResponese tracksResponese = new TracksResponese();
+        tracksResponese.setDriveMile(driveMile);
+        tracksResponese.setDriveTime(driveTime);
+        return ResponseResult.success(tracksResponese);
     }
 }
