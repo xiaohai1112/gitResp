@@ -92,4 +92,29 @@ public class TerminalClient {
         }
         return ResponseResult.success(list);
     }
+    public ResponseResult trsearch(String tid,Long starttime,Long endtime){
+        //拼接url
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(UrlDirectionConstant.TRSEARCH_URI);
+        stringBuilder.append("key="+key);
+        stringBuilder.append("&");
+        stringBuilder.append("sid="+sid);
+        stringBuilder.append("&");
+        stringBuilder.append("tid="+tid);
+        stringBuilder.append("&");
+        stringBuilder.append("starttime="+starttime);
+        stringBuilder.append("&");
+        stringBuilder.append("endtime="+endtime);
+        /**
+         *这是get请求  .getForEntity
+         * post请求应用  .postForEntity
+         */
+        log.info("创建端口请求："+stringBuilder.toString());
+        ResponseEntity<String> forEntity = restTemplate.postForEntity(stringBuilder.toString(),null, String.class);
+        String body = forEntity.getBody();
+        log.info("创建端口响应："+body);
+
+
+        return null;
+    }
 }

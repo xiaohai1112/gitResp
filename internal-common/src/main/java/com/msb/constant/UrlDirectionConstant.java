@@ -30,6 +30,10 @@ public class UrlDirectionConstant {
      */
     public static final String ARPUNDSEARCH_URI="https://tsapi.amap.com/v1/track/terminal/aroundsearch?";
     /**
+     * 请求url的固定头  轨迹查询
+     */
+    public static final String TRSEARCH_URI="https://tsapi.amap.com/v1/track/terminal/trsearch?";
+    /**
      * 解析接口中参数
      * status
      * route
