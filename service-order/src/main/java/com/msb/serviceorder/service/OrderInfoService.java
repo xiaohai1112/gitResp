@@ -93,12 +93,31 @@ public class OrderInfoService {
         orderInfo.setGmtCreate(now);
         orderInfo.setGmtModified(now);
         orderInfoMapper.insert(orderInfo);
-        //搜索车辆
-        aroundsearch(orderInfo);
+        //定时任务处理
+        for (int i=0;i<6;i++){
+            //搜索车辆  派单
+            int result = aroundsearch(orderInfo);
+            if (result==1){
+                break;
+            }
+            try {
+                Thread.sleep(2);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
         return ResponseResult.success();
     }
 
-    public void aroundsearch(OrderInfo orderInfo) {
+    /**
+     * 派单逻辑
+     * 1：派单成功
+     * @param orderInfo
+     * @return
+     */
+    public int aroundsearch(OrderInfo orderInfo) {
+        System.out.println("循环一次");
+        int result=0;
         String depLatitude = orderInfo.getDepLatitude();
         String depLongitude = orderInfo.getDepLongitude();
         String center = depLatitude + "," + depLongitude;
@@ -117,6 +136,7 @@ public class OrderInfoService {
             //[{"carId":1980825251740209154,"tid":"1557275988"}]
             //获取终端
             List<TerminalResponse> data = listResponseResult.getData();
+//            List<TerminalResponse> data = new ArrayList<>();
             for (int i = 0; i < data.size(); i++) {
                 TerminalResponse terminalResponse = data.get(i);
                 Long carId = terminalResponse.getCarId();
@@ -182,17 +202,15 @@ public class OrderInfoService {
                     passengerObject.put("receive_order_car_longitude",orderInfo.getReceiveOrderCarLongitude());
                     passengerObject.put("receive_order_car_latitude",orderInfo.getReceiveOrderCarLatitude());
                     serviceSsePlusClient.push(orderInfo.getPassengerId(), IdentyConstant.IDENTY_A,passengerObject.toString());
+                    result=1;
                     lock.unlock();
                     //派单成功，退出循环
                     break raduis;
                 }
             }
-            //解析终端
-
-            //查询车辆信息
-            //找到符合车辆进行派单
 
         }
+        return result;
     }
 
     private boolean isPriceRuleExists(OrderRequest orderRequest) {
