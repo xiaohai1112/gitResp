@@ -23,7 +23,7 @@ public class SSeController {
      */
     @GetMapping("/connect")
     public SseEmitter connect(@RequestParam Long userId, @RequestParam String identy){
-        System.out.println("driverId:"+userId+"identy"+identy);
+        System.out.println("userId:"+userId+"identy"+identy);
         String sseEmitterMapKey= SsePlushPrefixUtils.getConnect(userId,identy);
         SseEmitter sseEmitter = new SseEmitter(0L);
         sseEmitterMap.put(sseEmitterMapKey,sseEmitter);

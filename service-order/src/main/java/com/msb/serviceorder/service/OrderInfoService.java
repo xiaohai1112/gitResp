@@ -4,6 +4,7 @@ package com.msb.serviceorder.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.msb.Utils.RedisPrefixUtils;
 import com.msb.constant.CommonStatusEnum;
+import com.msb.constant.IdentyConstant;
 import com.msb.constant.OrderConstant;
 import com.msb.dao.OrderInfo;
 import com.msb.dao.PriceRule;
@@ -16,6 +17,7 @@ import com.msb.serviceorder.mapper.OrderInfoMapper;
 import com.msb.serviceorder.romate.ServiceDriverUserClient;
 import com.msb.serviceorder.romate.ServiceMapClient;
 import com.msb.serviceorder.romate.ServicePriceClient;
+import com.msb.serviceorder.romate.ServiceSsePlusClient;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.redisson.api.RLock;
@@ -48,6 +50,8 @@ public class OrderInfoService {
     ServiceMapClient serviceMapClient;
     @Autowired
     RedissonClient redissonClient;
+    @Autowired
+    ServiceSsePlusClient serviceSsePlusClient;
 
     public ResponseResult add(OrderRequest orderRequest) {
         PriceRuleNewRequest priceRuleNewRequest = new PriceRuleNewRequest();
@@ -147,7 +151,20 @@ public class OrderInfoService {
                     orderInfo.setVehicleNo(orderResponse.getVehicleNo());
                     orderInfo.setOrderStatus(OrderConstant.DRIVER_RECEIVE_ORDER);
                     orderInfoMapper.updateById(orderInfo);
+
+                    //通知司机
+                    JSONObject driverObject = new JSONObject();
+                    driverObject.put("passenger_id",orderInfo.getPassengerId());
+                    driverObject.put("passenger_phone",orderInfo.getPassengerId());
+                    driverObject.put("departure",orderInfo.getDeparture());
+                    driverObject.put("dep_longitude",orderInfo.getDepLongitude());
+                    driverObject.put("dep_latitude",orderInfo.getDepLatitude());
+                    driverObject.put("destination",orderInfo.getDestination());
+                    driverObject.put("dest_longitude",orderInfo.getDestLongitude());
+                    driverObject.put("dest_latitude",orderInfo.getDestLatitude());
+                    serviceSsePlusClient.push(driverId, IdentyConstant.IDENTY_B,driverObject.toString());
                     lock.unlock();
+                    //派单成功，退出循环
                     break raduis;
                 }
             }
@@ -155,7 +172,7 @@ public class OrderInfoService {
 
             //查询车辆信息
             //找到符合车辆进行派单
-            //派单成功，退出循环
+
         }
     }
 
