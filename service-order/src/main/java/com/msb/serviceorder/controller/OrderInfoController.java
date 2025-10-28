@@ -42,4 +42,14 @@ public class OrderInfoController {
     public ResponseResult arrivedDeparture(@RequestParam Long orderId){
         return orderInfoService.arrivedDeparture(orderId);
     }
+    //接到乘客
+    @PostMapping("/pickUpPassenger")
+    public ResponseResult pickUpPassenger(@RequestBody OrderRequest orderRequest){
+        return orderInfoService.pickUpPassenger(orderRequest);
+    }
+    //行程结束到达目的地
+    @PostMapping("/passengerGetoff")
+    public ResponseResult passengerGetoff(@RequestBody OrderRequest orderRequest){
+        return orderInfoService.passengerGetoff(orderRequest);
+    }
 }

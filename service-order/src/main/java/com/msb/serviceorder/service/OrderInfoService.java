@@ -332,4 +332,37 @@ public class OrderInfoService {
         orderInfoMapper.updateById(orderInfo);
         return ResponseResult.success("");
     }
+
+    /**
+     * 接到乘客
+     * @param orderRequest
+     * @return
+     */
+    public ResponseResult pickUpPassenger(OrderRequest orderRequest){
+        Long orderId = orderRequest.getOrderId();
+        QueryWrapper<OrderInfo> orderInfoQueryWrapper = new QueryWrapper<>();
+        orderInfoQueryWrapper.eq("id",orderId);
+        OrderInfo orderInfo = orderInfoMapper.selectOne(orderInfoQueryWrapper);
+        orderInfo.setPickUpPassengerTime(LocalDateTime.now());
+        orderInfo.setPickUpPassengerLongitude(orderRequest.getPickUpPassengerLongitude());
+        orderInfo.setPickUpPassengerLatitude(orderRequest.getPickUpPassengerLatitude());
+        orderInfo.setOrderStatus(OrderConstant.PICK_UP_PASSENGER);
+        orderInfoMapper.updateById(orderInfo);
+        return ResponseResult.success("");
+    }
+    public ResponseResult passengerGetoff(@RequestBody OrderRequest orderRequest){
+        Long orderId = orderRequest.getOrderId();
+        QueryWrapper<OrderInfo> orderInfoQueryWrapper = new QueryWrapper<>();
+        orderInfoQueryWrapper.eq("id",orderId);
+        OrderInfo orderInfo = orderInfoMapper.selectOne(orderInfoQueryWrapper);
+        orderInfo.setPassengerGetoffTime(LocalDateTime.now());
+        orderInfo.setPassengerGetoffLongitude(orderRequest.getPassengerGetoffLongitude());
+        orderInfo.setPassengerGetoffLatitude(orderRequest.getPassengerGetoffLatitude());
+        orderInfo.setOrderStatus(OrderConstant.PASSENGER_GETOFF);
+        //订单行驶的路程和时间
+
+
+        orderInfoMapper.updateById(orderInfo);
+        return ResponseResult.success("");
+    }
 }
