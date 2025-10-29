@@ -15,17 +15,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Slf4j
-public class ForecastPriceService {
+public class PriceService {
     @Autowired
     private PriceRuleMapper priceRuleMapper;
     @Autowired
     private ServiceMapClient serviceMapClient;
+
+    /**
+     * 计算预估价格
+     * @param depLongitude
+     * @param depLatitude
+     * @param destLongitude
+     * @param destLatitude
+     * @param cityCode
+     * @param vehicleType
+     * @return
+     */
     public ResponseResult forecastPrice(String depLongitude, String depLatitude, String destLongitude, String destLatitude,String cityCode,String vehicleType){
         log.info("出发经度："+depLongitude);
         log.info("出发纬度："+depLatitude);
@@ -67,6 +76,29 @@ public class ForecastPriceService {
     }
 
     /**
+     * 计算实际价格
+     * @param distance
+     * @param duration
+     * @param cityCode
+     * @param vehicleType
+     * @return
+     */
+    public ResponseResult calculatePrice(Integer distance,Integer duration,String cityCode,String vehicleType){
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("city_code",cityCode);
+        queryWrapper.eq("vehicle_type",vehicleType);
+        queryWrapper.orderByDesc("fare_version");
+        List<PriceRule> priceRules = priceRuleMapper.selectList(queryWrapper);
+        if (priceRules.size()==0){
+            return ResponseResult.fail(CommonStatusEnum.PICE_RULE_NOT_EXIST.getCode(),CommonStatusEnum.PICE_RULE_NOT_EXIST.getValue());
+        }
+        PriceRule priceRule = priceRules.get(0);
+        log.info("根据距离、时长和计价规则，计算价格");
+        double price = getprice(distance, duration, priceRule);
+        return ResponseResult.success(price);
+    }
+
+    /**
      * 根据距离、时长和计价规则来计算最终价格
      * @param distance 距离
      * @param duration 时长
@@ -74,7 +106,7 @@ public class ForecastPriceService {
      * @return
      */
 
-    private double getprice(Integer distance,Integer duration,PriceRule priceRule){
+    public double getprice(Integer distance,Integer duration,PriceRule priceRule){
         double price=0;
         //起步价
         double startFare = priceRule.getStartFare();

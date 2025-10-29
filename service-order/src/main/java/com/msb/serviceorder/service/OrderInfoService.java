@@ -154,6 +154,14 @@ public class OrderInfoService {
                     System.out.println(("找到车了" + carId));
                     OrderResponse orderResponse = availableDriver.getData();
                     Long driverId = orderResponse.getDriverId();
+                    String vehicleTypeFromCar = orderResponse.getVehicleType();
+                    String vehicleType = orderInfo.getVehicleType();
+                    if (!vehicleTypeFromCar.trim().equals(vehicleType.trim())){
+                        System.out.println("车型不符合");
+                        continue ;
+                    }
+
+
                     String lockKey = (driverId + "").intern();
                     RLock lock = redissonClient.getLock(lockKey);
                     lock.lock();
@@ -370,6 +378,7 @@ public class OrderInfoService {
         TracksResponese data = trsearch.getData();
         orderInfo.setDriveTime(data.getDriveTime());
         orderInfo.setDriveMile(data.getDriveMile());
+
 
         orderInfoMapper.updateById(orderInfo);
         return ResponseResult.success("");
