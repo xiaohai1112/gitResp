@@ -360,6 +360,12 @@ public class OrderInfoService {
         orderInfoMapper.updateById(orderInfo);
         return ResponseResult.success("");
     }
+
+    /**
+     * 结束订单
+     * @param orderRequest
+     * @return
+     */
     public ResponseResult passengerGetoff(@RequestBody OrderRequest orderRequest){
         Long orderId = orderRequest.getOrderId();
         QueryWrapper<OrderInfo> orderInfoQueryWrapper = new QueryWrapper<>();
@@ -374,12 +380,16 @@ public class OrderInfoService {
         System.out.println(carById.getData().getId());
         long starttime = orderInfo.getPickUpPassengerTime().toInstant(ZoneOffset.of("+8")).toEpochMilli();
         long endtime = LocalDateTime.now().toInstant(ZoneOffset.of("+8")).toEpochMilli();
-        ResponseResult<TracksResponese> trsearch = serviceMapClient.trsearch(carById.getData().getTid(), starttime, endtime);
+        ResponseResult<TracksResponese> trsearch = serviceMapClient.trsearch(carById.getData().getTid(), starttime, 1761654171000L);
         TracksResponese data = trsearch.getData();
-        orderInfo.setDriveTime(data.getDriveTime());
-        orderInfo.setDriveMile(data.getDriveMile());
-
-
+        Long driveTime = data.getDriveTime();
+        Long driveMile = data.getDriveMile();
+        orderInfo.setDriveTime(driveTime);
+        orderInfo.setDriveMile(driveMile);
+        //计算价格
+        ResponseResult<Double> doubleResponseResult = servicePriceClient.calculatePrice(driveMile.intValue(), driveTime.intValue(), orderInfo.getAddress(), orderInfo.getVehicleType());
+        Double price = doubleResponseResult.getData();
+        orderInfo.setPrice(price);
         orderInfoMapper.updateById(orderInfo);
         return ResponseResult.success("");
     }

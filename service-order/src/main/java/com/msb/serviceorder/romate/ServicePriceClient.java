@@ -12,4 +12,6 @@ public interface ServicePriceClient {
     public ResponseResult<Boolean> isLatestVersion(@RequestBody PriceRuleNewRequest priceRuleNewRequest);
     @RequestMapping(method = RequestMethod.POST,value = "/price/is-exits")
     public ResponseResult<Boolean> isExits(@RequestBody PriceRule priceRule);
+    @RequestMapping(method = RequestMethod.POST,value = "/calculatePrice")
+    public ResponseResult<Double> calculatePrice(@RequestParam Integer distance, @RequestParam Integer duration, @RequestParam String cityCode,@RequestParam String vehicleType);
 }

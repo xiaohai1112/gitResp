@@ -25,7 +25,7 @@ public class ForecastPriceController {
         return priceService.forecastPrice(depLongitude,depLatitude,destLongitude,destLatitude,cityCode,vehicleType);
     }
     @PostMapping("/calculatePrice")
-    public ResponseResult calculatePrice(@RequestParam Integer distance, @RequestParam Integer duration, @RequestParam String cityCode,@RequestParam String vehicleType){
+    public ResponseResult<Double> calculatePrice(@RequestParam Integer distance, @RequestParam Integer duration, @RequestParam String cityCode,@RequestParam String vehicleType){
         return priceService.calculatePrice(distance,duration,cityCode,vehicleType);
     }
 
