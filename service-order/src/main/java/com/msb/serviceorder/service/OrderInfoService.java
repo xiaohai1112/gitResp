@@ -105,6 +105,12 @@ public class OrderInfoService {
             if (result==1){
                 break;
             }
+            if (i==5){
+                //订单无效
+                orderInfo.setOrderStatus(OrderConstant.ORDER_INVALID);
+                orderInfoMapper.updateById(orderInfo);
+            }
+            //等待20s
             try {
                 Thread.sleep(2);
             } catch (InterruptedException e) {
@@ -394,6 +400,7 @@ public class OrderInfoService {
         orderInfoMapper.updateById(orderInfo);
         return ResponseResult.success("");
     }
+    //支付
     public ResponseResult pay(OrderRequest orderRequest){
         Long orderId = orderRequest.getOrderId();
         OrderInfo orderInfo = orderInfoMapper.selectById(orderId);
@@ -402,6 +409,7 @@ public class OrderInfoService {
 
         return ResponseResult.success();
     }
+    //取消订单
     public ResponseResult cancel(Long orderId,String identy){
         OrderInfo orderInfo = orderInfoMapper.selectById(orderId);
         Integer orderStatus = orderInfo.getOrderStatus();
