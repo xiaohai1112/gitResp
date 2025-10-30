@@ -16,6 +16,7 @@
         <option value="$PROJECT_DIR$/service-order/pom.xml" />
         <option value="$PROJECT_DIR$/sse-driver-client-web/pom.xml" />
         <option value="$PROJECT_DIR$/service-sse-push/pom.xml" />
+        <option value="$PROJECT_DIR$/test-alipy/pom.xml" />
       </list>
     </option>
   </component>
