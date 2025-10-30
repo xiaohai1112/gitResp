@@ -1,10 +1,10 @@
-package com.msb.testalipy;
+package com.msb.servicealipay;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class TestAlipyApplicationTests {
+class ServiceAlipayApplicationTests {
 
     @Test
     void contextLoads() {

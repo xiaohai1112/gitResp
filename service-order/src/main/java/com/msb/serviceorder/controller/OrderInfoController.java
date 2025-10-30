@@ -52,4 +52,12 @@ public class OrderInfoController {
     public ResponseResult passengerGetoff(@RequestBody OrderRequest orderRequest){
         return orderInfoService.passengerGetoff(orderRequest);
     }
+    @PostMapping("/pay")
+    public ResponseResult pay(@RequestBody OrderRequest orderRequest){
+        return orderInfoService.pay(orderRequest);
+    }
+    @PostMapping("/cancel")
+    public ResponseResult cancel(@RequestParam Long orderId,@RequestParam String identy){
+        return orderInfoService.cancel(orderId,identy);
+    }
 }

@@ -1,7 +1,9 @@
-package com.msb.testalipy.controller;
+package com.msb.servicealipay.controller;
 
 import com.alipay.easysdk.factory.Factory;
 import com.alipay.easysdk.payment.page.models.AlipayTradePagePayResponse;
+import com.msb.servicealipay.service.AlipayService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +28,8 @@ public class AlipayController {
         }
         return response.getBody();
     }
+//    @Autowired
+//    AlipayService alipayService;
     @PostMapping("/notify")
     public String notify(HttpServletRequest request) throws Exception {
         System.out.println("支付宝回调");
@@ -37,11 +41,14 @@ public class AlipayController {
                 map.put(name,request.getParameter(name));
             }
             if (Factory.Payment.Common().verifyNotify(map)){
-                for (String name:map.keySet()){
-                    System.out.println("接收到的参数：");
-                    System.out.println(name+","+map.get(name));
-                }
+                System.out.println("----------------");
+//                String s = map.get("out_trade_no");
+//                Long orderId=Long.parseLong(s);
+//                System.out.println("支付宝回调"+orderId);
+//                alipayService.pay(orderId);
             }
+        }else {
+            System.out.println("支付宝验证 不通过！");
         }
         return "success";
     }

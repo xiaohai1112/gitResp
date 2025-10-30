@@ -8,10 +8,10 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     <groupId>com.msb</groupId>
-    <artifactId>test-alipy</artifactId>
+    <artifactId>service-alipay</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>test-alipy</name>
-    <description>test-alipy</description>
+    <name>service-alipay</name>
+    <description>service-alipay</description>
     <properties>
         <java.version>17</java.version>
     </properties>
@@ -35,6 +35,18 @@
             <groupId>com.alipay.sdk</groupId>
             <artifactId>alipay-easysdk</artifactId>
             <version>2.2.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
     </dependencies>
 
