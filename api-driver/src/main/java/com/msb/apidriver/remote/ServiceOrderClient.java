@@ -19,4 +19,7 @@ public interface ServiceOrderClient {
     //行程结束到达目的地
     @RequestMapping(method = RequestMethod.POST,value = "/order/passengerGetoff")
     public ResponseResult passengerGetoff(@RequestBody OrderRequest orderRequest);
+    //取消订单
+    @RequestMapping(method = RequestMethod.POST,value = "/order/cancel")
+    public ResponseResult cancel(@RequestParam Long orderId, @RequestParam String identy);
 }

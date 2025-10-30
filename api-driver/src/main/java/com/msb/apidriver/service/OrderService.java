@@ -1,6 +1,7 @@
 package com.msb.apidriver.service;
 
 import com.msb.apidriver.remote.ServiceOrderClient;
+import com.msb.constant.IdentyConstant;
 import com.msb.dao.ResponseResult;
 import com.msb.request.OrderRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,5 +24,8 @@ public class OrderService {
     }
     public ResponseResult passengerGetoff(@RequestBody OrderRequest orderRequest){
         return serviceOrderClient.passengerGetoff(orderRequest);
+    }
+    public ResponseResult cancel(@RequestParam Long orderId){
+        return serviceOrderClient.cancel(orderId, IdentyConstant.IDENTY_B);
     }
 }

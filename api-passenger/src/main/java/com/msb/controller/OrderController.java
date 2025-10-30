@@ -1,5 +1,6 @@
 package com.msb.controller;
 
+import com.msb.constant.IdentyConstant;
 import com.msb.dao.ResponseResult;
 import com.msb.request.OrderRequest;
 import com.msb.service.OrderService;
@@ -15,5 +16,9 @@ public class OrderController {
     public ResponseResult add(@RequestBody OrderRequest orderRequest){
         System.out.println(orderRequest);
         return orderService.add(orderRequest);
+    }
+    @PostMapping("/cancel")
+    public ResponseResult cancel(@RequestParam Long orderId){
+        return orderService.cancel(orderId);
     }
 }

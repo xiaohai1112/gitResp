@@ -31,4 +31,9 @@ public class OrderController {
     public ResponseResult passengerGetoff(@RequestBody OrderRequest orderRequest){
         return orderService.passengerGetoff(orderRequest);
     }
+    //quxiaodingd
+    @PostMapping("/cancel")
+    public ResponseResult cancel(@RequestParam Long orderId){
+        return orderService.cancel(orderId);
+    }
 }
