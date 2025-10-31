@@ -151,8 +151,8 @@ public class OrderInfoService {
             for (int i = 0; i < data.size(); i++) {
                 TerminalResponse terminalResponse = data.get(i);
                 Long carId = terminalResponse.getCarId();
-                Long latitude = terminalResponse.getLatitude();
-                Long longitude = terminalResponse.getLongitude();
+                String latitude = terminalResponse.getLatitude();
+                String longitude = terminalResponse.getLongitude();
                 ResponseResult<OrderResponse> availableDriver = serviceDriverUserClient.getAvailableDriver(carId);
                 if (availableDriver.getCode() == CommonStatusEnum.AVAILABLE_DRIVER_NOT_EXIST.getCode()) {
                     System.out.println(("没有司机" + carId));
@@ -184,8 +184,8 @@ public class OrderInfoService {
                     orderInfo.setDriverPhone(orderResponse.getDriverPhone());
                     orderInfo.setCarId(carId);
                     //地图
-                    orderInfo.setReceiveOrderCarLongitude(longitude + "");
-                    orderInfo.setReceiveOrderCarLatitude(latitude + "");
+                    orderInfo.setReceiveOrderCarLongitude(longitude);
+                    orderInfo.setReceiveOrderCarLatitude(latitude);
                     orderInfo.setReceiveOrderTime(LocalDateTime.now());
 
                     orderInfo.setLicenseId(orderResponse.getLicenseId());
@@ -195,6 +195,7 @@ public class OrderInfoService {
 
                     //通知司机
                     JSONObject driverObject = new JSONObject();
+                    driverObject.put("order_id",orderInfo.getId());
                     driverObject.put("passenger_id",orderInfo.getPassengerId());
                     driverObject.put("passenger_phone",orderInfo.getPassengerId());
                     driverObject.put("departure",orderInfo.getDeparture());
@@ -207,6 +208,7 @@ public class OrderInfoService {
 
                     //通知乘客
                     JSONObject passengerObject = new JSONObject();
+                    passengerObject.put("order_id",orderInfo.getId());
                     passengerObject.put("driver_id",orderInfo.getDriverId());
                     passengerObject.put("driver_phone",orderInfo.getDriverPhone());
                     passengerObject.put("vehicle_no",orderInfo.getVehicleNo());
@@ -387,7 +389,7 @@ public class OrderInfoService {
         System.out.println(carById.getData().getId());
         long starttime = orderInfo.getPickUpPassengerTime().toInstant(ZoneOffset.of("+8")).toEpochMilli();
         long endtime = LocalDateTime.now().toInstant(ZoneOffset.of("+8")).toEpochMilli();
-        ResponseResult<TracksResponese> trsearch = serviceMapClient.trsearch(carById.getData().getTid(), starttime, 1761654171000L);
+        ResponseResult<TracksResponese> trsearch = serviceMapClient.trsearch(carById.getData().getTid(), starttime, endtime);
         TracksResponese data = trsearch.getData();
         Long driveTime = data.getDriveTime();
         Long driveMile = data.getDriveMile();
@@ -473,6 +475,14 @@ public class OrderInfoService {
         orderInfo.setCancelOperator(Integer.parseInt(identy));
         orderInfo.setCancelTime(cancelTime);
         orderInfo.setOrderStatus(OrderConstant.ORDER_CANCEL);
+        orderInfoMapper.updateById(orderInfo);
+        return ResponseResult.success();
+    }
+
+    public ResponseResult pushPayInfo(OrderRequest orderRequest) {
+        Long orderId = orderRequest.getOrderId();
+        OrderInfo orderInfo = orderInfoMapper.selectById(orderId);
+        orderInfo.setOrderStatus(OrderConstant.TO_START_PAY);
         orderInfoMapper.updateById(orderInfo);
         return ResponseResult.success();
     }

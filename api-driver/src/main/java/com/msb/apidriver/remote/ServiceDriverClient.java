@@ -2,6 +2,7 @@ package com.msb.apidriver.remote;
 
 import com.msb.dao.Car;
 import com.msb.dao.DriverUser;
+import com.msb.dao.DriverUserWorkStatus;
 import com.msb.dao.ResponseResult;
 import com.msb.responese.DriverUserExistsResponse;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -30,4 +31,10 @@ public interface ServiceDriverClient {
      */
     @RequestMapping(method = RequestMethod.GET,value = "/car")
     public ResponseResult<Car> getCarById(@RequestParam Long carId);
+
+    @RequestMapping(method = RequestMethod.POST,value = "/driver_user_work_status")
+    public ResponseResult update(@RequestBody DriverUserWorkStatus driverUserWorkStatus);
+
+    @RequestMapping(method = RequestMethod.POST,value ="/driver_car_binding_relationships")
+    public ResponseResult driverCarBindingRelationship(@RequestParam String driverPhone);
 }

@@ -5,12 +5,9 @@ import com.msb.dao.DriverCarBindingRelationship;
 import com.msb.dao.ResponseResult;
 import com.msb.servicedriveruser.service.DriverCarBindingRelationshipService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
@@ -31,5 +28,9 @@ public class DriverCarBindingRelationshipController {
     @PostMapping("/driver_car_binding_relationship/unbind")
     public ResponseResult update(@RequestBody DriverCarBindingRelationship driverCarBindingRelationship){
         return driverCarBindingRelationshipService.updateDriverCarBindingRelationship(driverCarBindingRelationship);
+    }
+    @PostMapping("/driver_car_binding_relationships")
+    public ResponseResult driverCarBindingRelationship(@RequestParam String driverPhone){
+        return driverCarBindingRelationshipService.getDriverCarBindingRelationshipByPhone(driverPhone);
     }
 }

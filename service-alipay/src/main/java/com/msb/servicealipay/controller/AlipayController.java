@@ -28,8 +28,8 @@ public class AlipayController {
         }
         return response.getBody();
     }
-//    @Autowired
-//    AlipayService alipayService;
+    @Autowired
+    AlipayService alipayService;
     @PostMapping("/notify")
     public String notify(HttpServletRequest request) throws Exception {
         System.out.println("支付宝回调");
@@ -42,10 +42,10 @@ public class AlipayController {
             }
             if (Factory.Payment.Common().verifyNotify(map)){
                 System.out.println("----------------");
-//                String s = map.get("out_trade_no");
-//                Long orderId=Long.parseLong(s);
-//                System.out.println("支付宝回调"+orderId);
-//                alipayService.pay(orderId);
+                String s = map.get("out_trade_no");
+                Long orderId=Long.parseLong(s);
+                System.out.println("支付宝回调"+orderId);
+                alipayService.pay(orderId);
             }
         }else {
             System.out.println("支付宝验证 不通过！");

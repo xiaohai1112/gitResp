@@ -31,7 +31,7 @@ public class OrderController {
     public ResponseResult passengerGetoff(@RequestBody OrderRequest orderRequest){
         return orderService.passengerGetoff(orderRequest);
     }
-    //quxiaodingd
+    //取消订单
     @PostMapping("/cancel")
     public ResponseResult cancel(@RequestParam Long orderId){
         return orderService.cancel(orderId);

@@ -1,0 +1,23 @@
+联调
+
+乘客
+手机号 18150366001
+验证码 730325
+"accessToken": eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZGVudHkiOiIxIiwicGhvbmUiOiIxODE1MDM2NjAwMSIsInRva2VuVGltZSI6IkZyaSBPY3QgMzEgMTI6MTY6MzcgQ1NUIDIwMjUiLCJ0b2tlblR5cGUiOiJhY2Nlc3NUeXBlIn0.PYOJUyTqwcHoIg0pMQgqLt2PN2GO99ipzVFT9Q52oGc
+"refreshToken": eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZGVudHkiOiIxIiwicGhvbmUiOiIxODE1MDM2NjAwMSIsInRva2VuVGltZSI6IkZyaSBPY3QgMzEgMTI6MTY6MzggQ1NUIDIwMjUiLCJ0b2tlblR5cGUiOiJyZWZyZXNoVHlwZSJ9.-Z3o96xsSYrycgTPfOAs3ykd-4tjT9UmiWB2EeZ3kq8
+
+预估价格
+{
+    "depLongitude": "116.511505",
+    "depLatitude": "39.94576",
+    "destLongitude": "116.397631",
+    "destLatitude": "39.995391",
+    "cityCode": "110000",
+    "vehicleType": "1"
+}
+
+司机
+手机号 13800138001
+验证码 500719
+"accessToken": eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZGVudHkiOiIyIiwicGhvbmUiOiIxMzgwMDEzODAwMSIsInRva2VuVGltZSI6IkZyaSBPY3QgMzEgMTI6MjU6NDYgQ1NUIDIwMjUiLCJ0b2tlblR5cGUiOiJhY2Nlc3NUeXBlIn0.bPFAFjxFMM6luEibsxRRFfVM23b2SWudVjkopmHu7V8
+"refreshToken": eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZGVudHkiOiIyIiwicGhvbmUiOiIxMzgwMDEzODAwMSIsInRva2VuVGltZSI6IkZyaSBPY3QgMzEgMTI6MjU6NDYgQ1NUIDIwMjUiLCJ0b2tlblR5cGUiOiJyZWZyZXNoVHlwZSJ9.Qlg9CTBTKkxVevHC550r82oZ_HyUT3paWu4psnZrw2k

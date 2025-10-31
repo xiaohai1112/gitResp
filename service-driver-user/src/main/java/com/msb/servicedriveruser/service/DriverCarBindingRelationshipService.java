@@ -5,10 +5,13 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.msb.constant.CommonStatusEnum;
 import com.msb.constant.DriverCarConstant;
 import com.msb.dao.DriverCarBindingRelationship;
+import com.msb.dao.DriverUser;
 import com.msb.dao.ResponseResult;
 import com.msb.servicedriveruser.mapper.DriverCarBindingRelationshipMapper;
+import com.msb.servicedriveruser.mapper.DriverUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -27,6 +30,8 @@ import java.util.Map;
 public class DriverCarBindingRelationshipService {
     @Autowired
     private DriverCarBindingRelationshipMapper driverCarBindingRelationshipMapper;
+    @Autowired
+    private DriverUserMapper driverUserMapper;
     public ResponseResult addDriverCarBindingRelationship(DriverCarBindingRelationship driverCarBindingRelationship){
         QueryWrapper<DriverCarBindingRelationship> queryWrapper=new QueryWrapper<>();
         queryWrapper.eq("driver_id",driverCarBindingRelationship.getDriverId());
@@ -74,5 +79,16 @@ public class DriverCarBindingRelationshipService {
         driverCarBindingRelationshipMapper.updateById(dcr);
         return ResponseResult.success("");
     }
+    public ResponseResult<DriverCarBindingRelationship> getDriverCarBindingRelationshipByPhone(String driverPhone){
+        QueryWrapper<DriverUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("driver_phone",driverPhone);
+        DriverUser driverUser = driverUserMapper.selectOne(queryWrapper);
+        Long driverId = driverUser.getId();
+        QueryWrapper<DriverCarBindingRelationship> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.eq("driver_id",driverId);
+        queryWrapper1.eq("bind_state",DriverCarConstant.DRIVER_CAR_BIND);
 
+        DriverCarBindingRelationship driverCarBindingRelationship = driverCarBindingRelationshipMapper.selectOne(queryWrapper1);
+        return ResponseResult.success(driverCarBindingRelationship);
+    }
 }

@@ -22,4 +22,6 @@ public interface ServiceOrderClient {
     //取消订单
     @RequestMapping(method = RequestMethod.POST,value = "/order/cancel")
     public ResponseResult cancel(@RequestParam Long orderId, @RequestParam String identy);
+    @RequestMapping(method = RequestMethod.POST,value = "/order/push-pay-info")
+    public ResponseResult pushPayInfo(@RequestBody OrderRequest orderRequest);
 }
